@@ -22,18 +22,10 @@ Use full GitHub permalinks. Static documentation sites cannot resolve relative p
 
 **DO:**
 
-- `https://github.com/HYP3R00T/devcontainer-python-template/blob/main/pyproject.toml`
-- `https://github.com/HYP3R00T/devcontainer-python-template/blob/main/zensical.toml`
+- `https://github.com/HYP3R00T/shiftcraft/blob/main/pyproject.toml`
+- `https://github.com/HYP3R00T/shiftcraft/blob/main/zensical.toml`
 
 **DON'T:**
 
 - Relative paths: `[setup.sh](../../scripts/setup.sh)`
 - Links without protocol or host: `blob/main/file.py`
-
-## Referencing Git History and Decisions
-
-When writing "Thinking" or "Journey" docs, link to specific commit SHAs.
-
-**DO:**
-
-- "In [commit a1b2c3d](https://github.com/HYP3R00T/devcontainer-python-template/commit/a1b2c3d), we updated the test coverage threshold to keep CI quality gates clear"

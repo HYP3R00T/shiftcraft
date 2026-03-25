@@ -102,7 +102,7 @@ wheels = [
 ]
 
 [[package]]
-name = "devcontainer-python-template"
+name = "shiftcraft"
 version = "0.1.0"
 source = { virtual = "." }
 

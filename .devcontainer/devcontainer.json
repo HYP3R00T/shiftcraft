@@ -1,5 +1,5 @@
 {
-  "name": "devcontainer-python-template",
+  "name": "shiftcraft",
   "build": {
     "context": ".",
     "dockerfile": "Dockerfile"
