@@ -1,0 +1,25 @@
+{
+  "editor.formatOnSave": true,
+  "editor.insertSpaces": true,
+  "[markdown]": {
+    "editor.defaultFormatter": "DavidAnson.vscode-markdownlint"
+  },
+  "[python]": {
+    "editor.defaultFormatter": "charliermarsh.ruff"
+  },
+  "[toml]": {
+    "editor.defaultFormatter": "tamasfe.even-better-toml"
+  },
+  "[yaml]": {
+    "editor.defaultFormatter": "redhat.vscode-yaml",
+    "editor.quickSuggestions": {
+      "comments": false,
+      "other": true,
+      "strings": true
+    }
+  },
+  "chat.useAgentsMdFile": true,
+  "markdownlint.configFile": ".markdownlint.yaml",
+  "python.languageServer": "None",
+  "ruff.nativeServer": true
+}
