@@ -1,49 +1,180 @@
 {
-  "employees": ["A", "B", "C", "D", "E"],
-  "days": 7,
-  "shifts": ["M", "A", "N"],
-  "constraints": [
-    {
-      "type": "one_shift_per_day",
-      "mode": "hard",
-      "params": {}
-    },
-    {
-      "type": "coverage",
-      "mode": "hard",
-      "params": {
-        "min_per_shift": 1
+  "period": {
+    "start": "2025-04-01",
+    "end": "2025-04-30"
+  },
+
+  "coverage": {
+    "by_day_of_week": {
+      "monday": {
+        "morning":   { "min": 1, "target": 1, "max": 1 },
+        "afternoon": { "min": 1, "target": 1, "max": 1 },
+        "night":     { "min": 1, "target": 1, "max": 1 },
+        "regular":   { "min": 0, "target": 1, "max": 1 }
+      },
+      "tuesday": {
+        "morning":   { "min": 1, "target": 1, "max": 1 },
+        "afternoon": { "min": 1, "target": 1, "max": 1 },
+        "night":     { "min": 1, "target": 1, "max": 1 },
+        "regular":   { "min": 0, "target": 1, "max": 1 }
+      },
+      "wednesday": {
+        "morning":   { "min": 1, "target": 1, "max": 1 },
+        "afternoon": { "min": 1, "target": 1, "max": 1 },
+        "night":     { "min": 1, "target": 1, "max": 1 },
+        "regular":   { "min": 0, "target": 1, "max": 1 }
+      },
+      "thursday": {
+        "morning":   { "min": 1, "target": 1, "max": 1 },
+        "afternoon": { "min": 1, "target": 1, "max": 1 },
+        "night":     { "min": 1, "target": 1, "max": 1 },
+        "regular":   { "min": 0, "target": 1, "max": 1 }
+      },
+      "friday": {
+        "morning":   { "min": 1, "target": 1, "max": 1 },
+        "afternoon": { "min": 1, "target": 1, "max": 1 },
+        "night":     { "min": 1, "target": 1, "max": 1 },
+        "regular":   { "min": 1, "target": 1, "max": 1 }
+      },
+      "saturday": {
+        "morning":   { "min": 1, "target": 1, "max": 1 },
+        "afternoon": { "min": 1, "target": 1, "max": 1 },
+        "night":     { "min": 1, "target": 1, "max": 1 },
+        "regular":   { "min": 0, "target": 0, "max": 0 }
+      },
+      "sunday": {
+        "morning":   { "min": 1, "target": 1, "max": 1 },
+        "afternoon": { "min": 1, "target": 1, "max": 1 },
+        "night":     { "min": 1, "target": 1, "max": 1 },
+        "regular":   { "min": 0, "target": 0, "max": 0 }
       }
     },
+    "by_date_range": [
+      {
+        "start": "2025-04-30",
+        "end": "2025-04-30",
+        "morning":   { "min": 1, "target": 1, "max": 1 },
+        "afternoon": { "min": 1, "target": 1, "max": 1 },
+        "night":     { "min": 1, "target": 1, "max": 1 },
+        "regular":   { "min": 1, "target": 1, "max": 1 }
+      }
+    ]
+  },
+
+  "team": [
     {
-      "type": "max_work_days",
-      "mode": "hard",
-      "params": {
-        "max": 5
+      "id": "E001",
+      "name": "Amogha",
+      "is_senior": true,
+      "comp_off_balance": 0
+    },
+
+    {
+      "id": "E002",
+      "name": "Suchi",
+      "is_senior": true,
+      "comp_off_balance": 2,
+      "history": {
+        "previous_period": {
+          "start": "2025-03-01",
+          "end": "2025-03-31",
+          "shifts_worked": {
+            "morning": 7,
+            "afternoon": 8,
+            "night": 7
+          },
+          "days_off": 1
+        }
       }
     },
+
     {
-      "type": "no_night_to_morning",
-      "mode": "hard",
-      "params": {}
+      "id": "E003",
+      "name": "Basheer",
+      "is_senior": true,
+      "comp_off_balance": 0
     },
+
     {
-      "type": "weekend_off",
-      "mode": "soft",
-      "weight": 10,
-      "params": {
-        "employees": ["A", "B"]
-      }
+      "id": "E004",
+      "name": "Anuhya",
+      "is_senior": false,
+      "comp_off_balance": 0
     },
+
     {
-      "type": "shift_switching",
-      "mode": "soft",
-      "weight": 1,
-      "params": {}
+      "id": "E005",
+      "name": "Pavani",
+      "is_senior": true,
+      "comp_off_balance": 0
     }
   ],
-  "objective": {
-    "assignment_weight": 1,
-    "fairness_weight": 1
+
+  "leave_requests": [
+    {
+      "id": "LR001",
+      "employee_id": "E001",
+      "date": "2025-06-05",
+      "leave_type": "annual",
+      "submitted_at": "2025-03-15T09:00:00Z",
+      "reason": "Requested leave"
+    },
+    {
+      "id": "LR002",
+      "employee_id": "E001",
+      "date": "2025-06-18",
+      "leave_type": "annual",
+      "submitted_at": "2025-03-15T09:05:00Z",
+      "reason": "Requested leave"
+    },
+    {
+      "id": "LR003",
+      "employee_id": "E001",
+      "date": "2025-06-19",
+      "leave_type": "annual",
+      "submitted_at": "2025-03-15T09:10:00Z",
+      "reason": "Requested leave"
+    },
+    {
+      "id": "LR004",
+      "employee_id": "E001",
+      "date": "2025-06-23",
+      "leave_type": "annual",
+      "submitted_at": "2025-03-15T09:15:00Z",
+      "reason": "Requested leave"
+    },
+    {
+      "id": "LR005",
+      "employee_id": "E003",
+      "date": "2025-06-28",
+      "leave_type": "annual",
+      "submitted_at": "2025-03-16T10:00:00Z",
+      "reason": "Requested leave"
+    },
+    {
+      "id": "LR006",
+      "employee_id": "E005",
+      "date": "2025-06-03",
+      "leave_type": "annual",
+      "submitted_at": "2025-03-17T11:00:00Z",
+      "reason": "Requested leave"
+    },
+    {
+      "id": "LR007",
+      "employee_id": "E005",
+      "date": "2025-06-04",
+      "leave_type": "annual",
+      "submitted_at": "2025-03-17T11:05:00Z",
+      "reason": "Requested leave"
+    }
+  ],
+
+  "holidays": [],
+
+  "config": {
+    "shift_type_tolerance": 1,
+    "allow_single_days": false,
+    "weekend_social_minimum": true,
+    "strict_mode": false
   }
 }
