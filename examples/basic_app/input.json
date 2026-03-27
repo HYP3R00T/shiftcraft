@@ -1,0 +1,49 @@
+{
+  "employees": ["A", "B", "C", "D", "E"],
+  "days": 7,
+  "shifts": ["M", "A", "N"],
+  "constraints": [
+    {
+      "type": "one_shift_per_day",
+      "mode": "hard",
+      "params": {}
+    },
+    {
+      "type": "coverage",
+      "mode": "hard",
+      "params": {
+        "min_per_shift": 1
+      }
+    },
+    {
+      "type": "max_work_days",
+      "mode": "hard",
+      "params": {
+        "max": 5
+      }
+    },
+    {
+      "type": "no_night_to_morning",
+      "mode": "hard",
+      "params": {}
+    },
+    {
+      "type": "weekend_off",
+      "mode": "soft",
+      "weight": 10,
+      "params": {
+        "employees": ["A", "B"]
+      }
+    },
+    {
+      "type": "shift_switching",
+      "mode": "soft",
+      "weight": 1,
+      "params": {}
+    }
+  ],
+  "objective": {
+    "assignment_weight": 1,
+    "fairness_weight": 1
+  }
+}
