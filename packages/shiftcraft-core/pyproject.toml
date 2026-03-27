@@ -1,15 +1,10 @@
 [project]
 name = "shiftcraft-core"
 version = "0.1.0"
-description = "Add your description here"
+description = "Constraint-driven workforce scheduling core engine using OR-Tools CP-SAT"
 readme = "README.md"
 requires-python = ">=3.13"
-dependencies = [
-    "ortools>=9.15.6755",
-]
-
-[project.scripts]
-shiftcraft-core = "shiftcraft_core:main"
+dependencies = ["ortools>=9.15.6755"]
 
 [build-system]
 requires = ["uv_build>=0.11.1,<0.12.0"]

@@ -1,2 +1,3 @@
-def main() -> None:
-    print("Hello from shiftcraft-core!")
+from shiftcraft_core.engine import solve
+
+__all__ = ["solve"]
