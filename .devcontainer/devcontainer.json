@@ -22,7 +22,8 @@
         "EditorConfig.EditorConfig",
         "timonwong.shellcheck",
         "DavidAnson.vscode-markdownlint",
-        "github.vscode-github-actions"
+        "github.vscode-github-actions",
+        "astral-sh.ty"
       ]
     }
   }
