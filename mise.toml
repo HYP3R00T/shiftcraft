@@ -30,3 +30,7 @@ description = "Serve the documentation locally"
 [tasks.test]
 run = "pytest --cov-report=term-missing --cov-fail-under=80"
 description = "Run fast tests with coverage report for all packages (fails under 80%)"
+
+[tasks.sync]
+run = "uv sync --all-packages"
+description = "Sync all workspace packages and dependencies"
