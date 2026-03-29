@@ -1,0 +1,18 @@
+[project]
+name = "shiftcraft-api"
+version = "0.1.0"
+description = "FastAPI wrapper around shiftcraft-core"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.34.0",
+    "shiftcraft-core",
+]
+
+[tool.uv.sources]
+shiftcraft-core = { workspace = true }
+
+[build-system]
+requires = ["uv_build>=0.11.1,<0.12.0"]
+build-backend = "uv_build"
