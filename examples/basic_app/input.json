@@ -1,233 +1,378 @@
 {
-  "period": {
-    "start": "2026-04-01",
-    "end": "2026-04-30"
-  },
-
-  "team": [
-    {
-      "id": "E001",
-      "name": "Amogha",
-      "is_senior": true,
-      "city": "Hyderabad",
-      "comp_off_balance": 0,
-      "leave_requests": [
-        {
-          "date": "2026-04-05",
-          "leave_type": null
-        },
-        {
-          "date": "2026-04-18",
-          "leave_type": null
-        },
-        {
-          "date": "2026-04-19",
-          "leave_type": null
-        },
-        {
-          "date": "2026-04-23",
-          "leave_type": null
-        }
-      ],
-      "history": {
-        "last_month_shift_counts": {
-          "morning": 8,
-          "afternoon": 5,
-          "night": 6,
-          "regular": 2,
-          "week_off": 9,
-          "leave": 1
-        },
-        "comp_off": {
-          "remaining_count": 0,
-          "records": [
-            {
-              "holiday_date": "2026-01-01",
-              "redeemed_on": "2026-02-10"
-            }
-          ]
-        }
-      }
+    "period": {
+        "start": "2026-04-01",
+        "end": "2026-04-30"
     },
-    {
-      "id": "E002",
-      "name": "Suchi",
-      "is_senior": true,
-      "city": "Bengaluru",
-      "comp_off_balance": 2,
-      "leave_requests": [],
-      "history": {
-        "last_month_shift_counts": {
-          "morning": 6,
-          "afternoon": 7,
-          "night": 7,
-          "regular": 3,
-          "week_off": 8,
-          "leave": 0
-        },
-        "comp_off": {
-          "remaining_count": 2,
-          "records": [
-            {
-              "holiday_date": "2026-01-26",
-              "redeemed_on": null
+    "team": [
+        {
+            "id": "E001",
+            "name": "Amogha",
+            "is_senior": true,
+            "city": "Hyderabad",
+            "comp_off_balance": 0,
+            "previous_week_days": {
+                "2026-03-30": "afternoon",
+                "2026-03-31": "week_off"
             },
-            {
-              "holiday_date": "2026-03-19",
-              "redeemed_on": null
+            "leave_requests": [
+                {
+                    "date": "2026-04-05",
+                    "leave_type": null
+                },
+                {
+                    "date": "2026-04-18",
+                    "leave_type": null
+                },
+                {
+                    "date": "2026-04-19",
+                    "leave_type": null
+                },
+                {
+                    "date": "2026-04-23",
+                    "leave_type": null
+                }
+            ],
+            "history": {
+                "last_month_shift_counts": {
+                    "morning": 8,
+                    "afternoon": 5,
+                    "night": 6,
+                    "regular": 2,
+                    "week_off": 9,
+                    "leave": 1
+                },
+                "comp_off": {
+                    "remaining_count": 0,
+                    "records": [
+                        {
+                            "holiday_date": "2026-01-01",
+                            "redeemed_on": "2026-02-10"
+                        }
+                    ]
+                }
             }
-          ]
-        }
-      }
-    },
-    {
-      "id": "E003",
-      "name": "Basheer",
-      "is_senior": true,
-      "city": "Hyderabad",
-      "comp_off_balance": 0,
-      "leave_requests": [
-        {
-          "date": "2026-04-28",
-          "leave_type": null
-        }
-      ],
-      "history": {
-        "last_month_shift_counts": {
-          "morning": 9,
-          "afternoon": 4,
-          "night": 6,
-          "regular": 3,
-          "week_off": 9,
-          "leave": 0
-        },
-        "comp_off": {
-          "remaining_count": 0,
-          "records": [
-            {
-              "holiday_date": "2026-01-14",
-              "redeemed_on": "2026-02-20"
-            }
-          ]
-        }
-      }
-    },
-    {
-      "id": "E004",
-      "name": "Anuhya",
-      "is_senior": false,
-      "city": "Hyderabad",
-      "comp_off_balance": 0,
-      "leave_requests": [],
-      "history": {
-        "last_month_shift_counts": {
-          "morning": 3,
-          "afternoon": 9,
-          "night": 6,
-          "regular": 2,
-          "week_off": 8,
-          "leave": 1
-        },
-        "comp_off": {
-          "remaining_count": 0,
-          "records": []
-        }
-      }
-    },
-    {
-      "id": "E005",
-      "name": "Pavani",
-      "is_senior": false,
-      "city": "Hyderabad",
-      "comp_off_balance": 0,
-      "leave_requests": [
-        {
-          "date": "2026-04-03",
-          "leave_type": null
         },
         {
-          "date": "2026-04-04",
-          "leave_type": null
-        }
-      ],
-      "history": {
-        "last_month_shift_counts": {
-          "morning": 5,
-          "afternoon": 6,
-          "night": 6,
-          "regular": 2,
-          "week_off": 10,
-          "leave": 2
-        },
-        "comp_off": {
-          "remaining_count": 0,
-          "records": [
-            {
-              "holiday_date": "2026-01-26",
-              "redeemed_on": "2026-03-05"
+            "id": "E002",
+            "name": "Suchi",
+            "is_senior": true,
+            "city": "Bengaluru",
+            "comp_off_balance": 2,
+            "previous_week_days": {
+                "2026-03-30": "morning",
+                "2026-03-31": "regular"
+            },
+            "leave_requests": [],
+            "history": {
+                "last_month_shift_counts": {
+                    "morning": 6,
+                    "afternoon": 7,
+                    "night": 7,
+                    "regular": 3,
+                    "week_off": 8,
+                    "leave": 0
+                },
+                "comp_off": {
+                    "remaining_count": 2,
+                    "records": [
+                        {
+                            "holiday_date": "2026-01-26",
+                            "redeemed_on": null
+                        },
+                        {
+                            "holiday_date": "2026-03-19",
+                            "redeemed_on": null
+                        }
+                    ]
+                }
             }
-          ]
+        },
+        {
+            "id": "E003",
+            "name": "Basheer",
+            "is_senior": true,
+            "city": "Hyderabad",
+            "comp_off_balance": 0,
+            "previous_week_days": {
+                "2026-03-30": "regular",
+                "2026-03-31": "afternoon"
+            },
+            "leave_requests": [
+                {
+                    "date": "2026-04-28",
+                    "leave_type": null
+                }
+            ],
+            "history": {
+                "last_month_shift_counts": {
+                    "morning": 9,
+                    "afternoon": 4,
+                    "night": 6,
+                    "regular": 3,
+                    "week_off": 9,
+                    "leave": 0
+                },
+                "comp_off": {
+                    "remaining_count": 0,
+                    "records": [
+                        {
+                            "holiday_date": "2026-01-14",
+                            "redeemed_on": "2026-02-20"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": "E004",
+            "name": "Anuhya",
+            "is_senior": false,
+            "city": "Hyderabad",
+            "comp_off_balance": 0,
+            "previous_week_days": {
+                "2026-03-30": "night",
+                "2026-03-31": "night"
+            },
+            "leave_requests": [],
+            "history": {
+                "last_month_shift_counts": {
+                    "morning": 3,
+                    "afternoon": 9,
+                    "night": 6,
+                    "regular": 2,
+                    "week_off": 8,
+                    "leave": 1
+                },
+                "comp_off": {
+                    "remaining_count": 0,
+                    "records": []
+                }
+            }
+        },
+        {
+            "id": "E005",
+            "name": "Pavani",
+            "is_senior": false,
+            "city": "Hyderabad",
+            "comp_off_balance": 0,
+            "previous_week_days": {
+                "2026-03-30": "week_off",
+                "2026-03-31": "morning"
+            },
+            "leave_requests": [
+                {
+                    "date": "2026-04-03",
+                    "leave_type": null
+                },
+                {
+                    "date": "2026-04-04",
+                    "leave_type": null
+                }
+            ],
+            "history": {
+                "last_month_shift_counts": {
+                    "morning": 5,
+                    "afternoon": 6,
+                    "night": 6,
+                    "regular": 2,
+                    "week_off": 10,
+                    "leave": 2
+                },
+                "comp_off": {
+                    "remaining_count": 0,
+                    "records": [
+                        {
+                            "holiday_date": "2026-01-26",
+                            "redeemed_on": "2026-03-05"
+                        }
+                    ]
+                }
+            }
         }
-      }
-    }
-  ],
-
-  "coverage": {
-    "by_day_of_week": {
-      "monday": {
-        "morning": { "min": 1, "target": 1, "max": 1 },
-        "afternoon": { "min": 1, "target": 1, "max": 1 },
-        "night": { "min": 1, "target": 1, "max": 1 },
-        "regular": { "min": 0, "target": 1, "max": 1 }
-      },
-      "tuesday": {
-        "morning": { "min": 1, "target": 1, "max": 1 },
-        "afternoon": { "min": 1, "target": 1, "max": 1 },
-        "night": { "min": 1, "target": 1, "max": 1 },
-        "regular": { "min": 0, "target": 1, "max": 1 }
-      },
-      "wednesday": {
-        "morning": { "min": 1, "target": 1, "max": 1 },
-        "afternoon": { "min": 1, "target": 1, "max": 1 },
-        "night": { "min": 1, "target": 1, "max": 1 },
-        "regular": { "min": 0, "target": 1, "max": 1 }
-      },
-      "thursday": {
-        "morning": { "min": 1, "target": 1, "max": 1 },
-        "afternoon": { "min": 1, "target": 1, "max": 1 },
-        "night": { "min": 1, "target": 1, "max": 1 },
-        "regular": { "min": 0, "target": 1, "max": 1 }
-      },
-      "friday": {
-        "morning": { "min": 1, "target": 1, "max": 1 },
-        "afternoon": { "min": 1, "target": 1, "max": 1 },
-        "night": { "min": 1, "target": 1, "max": 1 },
-        "regular": { "min": 0, "target": 1, "max": 1 }
-      },
-      "saturday": {
-        "morning": { "min": 1, "target": 1, "max": 1 },
-        "afternoon": { "min": 1, "target": 1, "max": 1 },
-        "night": { "min": 1, "target": 1, "max": 1 },
-        "regular": { "min": 0, "target": 0, "max": 0 }
-      },
-      "sunday": {
-        "morning": { "min": 1, "target": 1, "max": 1 },
-        "afternoon": { "min": 1, "target": 1, "max": 1 },
-        "night": { "min": 1, "target": 1, "max": 1 },
-        "regular": { "min": 0, "target": 0, "max": 0 }
-      }
+    ],
+    "coverage": {
+        "by_day_of_week": {
+            "monday": {
+                "morning": {
+                    "min": 1,
+                    "target": 1,
+                    "max": 1
+                },
+                "afternoon": {
+                    "min": 1,
+                    "target": 1,
+                    "max": 1
+                },
+                "night": {
+                    "min": 1,
+                    "target": 1,
+                    "max": 1
+                },
+                "regular": {
+                    "min": 0,
+                    "target": 1,
+                    "max": 1
+                }
+            },
+            "tuesday": {
+                "morning": {
+                    "min": 1,
+                    "target": 1,
+                    "max": 1
+                },
+                "afternoon": {
+                    "min": 1,
+                    "target": 1,
+                    "max": 1
+                },
+                "night": {
+                    "min": 1,
+                    "target": 1,
+                    "max": 1
+                },
+                "regular": {
+                    "min": 0,
+                    "target": 1,
+                    "max": 1
+                }
+            },
+            "wednesday": {
+                "morning": {
+                    "min": 1,
+                    "target": 1,
+                    "max": 1
+                },
+                "afternoon": {
+                    "min": 1,
+                    "target": 1,
+                    "max": 1
+                },
+                "night": {
+                    "min": 1,
+                    "target": 1,
+                    "max": 1
+                },
+                "regular": {
+                    "min": 0,
+                    "target": 1,
+                    "max": 1
+                }
+            },
+            "thursday": {
+                "morning": {
+                    "min": 1,
+                    "target": 1,
+                    "max": 1
+                },
+                "afternoon": {
+                    "min": 1,
+                    "target": 1,
+                    "max": 1
+                },
+                "night": {
+                    "min": 1,
+                    "target": 1,
+                    "max": 1
+                },
+                "regular": {
+                    "min": 0,
+                    "target": 1,
+                    "max": 1
+                }
+            },
+            "friday": {
+                "morning": {
+                    "min": 1,
+                    "target": 1,
+                    "max": 1
+                },
+                "afternoon": {
+                    "min": 1,
+                    "target": 1,
+                    "max": 1
+                },
+                "night": {
+                    "min": 1,
+                    "target": 1,
+                    "max": 1
+                },
+                "regular": {
+                    "min": 0,
+                    "target": 1,
+                    "max": 1
+                }
+            },
+            "saturday": {
+                "morning": {
+                    "min": 1,
+                    "target": 1,
+                    "max": 1
+                },
+                "afternoon": {
+                    "min": 1,
+                    "target": 1,
+                    "max": 1
+                },
+                "night": {
+                    "min": 1,
+                    "target": 1,
+                    "max": 1
+                },
+                "regular": {
+                    "min": 0,
+                    "target": 0,
+                    "max": 0
+                }
+            },
+            "sunday": {
+                "morning": {
+                    "min": 1,
+                    "target": 1,
+                    "max": 1
+                },
+                "afternoon": {
+                    "min": 1,
+                    "target": 1,
+                    "max": 1
+                },
+                "night": {
+                    "min": 1,
+                    "target": 1,
+                    "max": 1
+                },
+                "regular": {
+                    "min": 0,
+                    "target": 0,
+                    "max": 0
+                }
+            }
+        },
+        "by_date_range": [
+            {
+                "start": "2026-04-30",
+                "end": "2026-04-30",
+                "morning": {
+                    "min": 1,
+                    "target": 1,
+                    "max": 1
+                },
+                "afternoon": {
+                    "min": 1,
+                    "target": 1,
+                    "max": 1
+                },
+                "night": {
+                    "min": 1,
+                    "target": 1,
+                    "max": 1
+                },
+                "regular": {
+                    "min": 1,
+                    "target": 1,
+                    "max": 1
+                }
+            }
+        ]
     },
-    "by_date_range": [
-      {
-        "start": "2026-04-30",
-        "end": "2026-04-30",
-        "morning": { "min": 1, "target": 1, "max": 1 },
-        "afternoon": { "min": 1, "target": 1, "max": 1 },
-        "night": { "min": 1, "target": 1, "max": 1 },
-        "regular": { "min": 1, "target": 1, "max": 1 }
-      }
-    ]
-  },
-
-  "holidays": []
+    "holidays": []
 }
