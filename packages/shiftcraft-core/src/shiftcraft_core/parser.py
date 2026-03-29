@@ -78,6 +78,16 @@ def load(payload: dict[str, Any]) -> ScheduleInput:
             )
             for r in comp_off_raw.get("records", [])
         ]
+
+        # Parse previous_week_days (optional field for cross-month week tracking)
+        previous_week_days: dict[date, str] | None = None
+        if "previous_week_days" in e and e["previous_week_days"]:
+            previous_week_days = {
+                _parse_date(date_str): shift_type
+                for date_str, shift_type in e["previous_week_days"].items()
+                if shift_type  # Skip empty strings
+            }
+
         employees.append(
             Employee(
                 id=e["id"],
@@ -95,6 +105,7 @@ def load(payload: dict[str, Any]) -> ScheduleInput:
                     leave=hist.get("leave", 0),
                 ),
                 comp_off_records=comp_off_records,
+                previous_week_days=previous_week_days,
             )
         )
 
@@ -135,5 +146,6 @@ def load(payload: dict[str, Any]) -> ScheduleInput:
         date_range_overrides=date_range_overrides,
         holidays=holidays,
     )
+
 
 # Made with Bob

@@ -46,6 +46,7 @@ class Employee:
     leave_requests: list[LeaveRequest]
     last_month_shift_counts: ShiftHistory
     comp_off_records: list[CompOffRecord]
+    previous_week_days: dict[date, str] | None = None  # Shifts from prev month in same ISO week
 
 
 @dataclass
@@ -127,5 +128,6 @@ class ScheduleInput:
     def is_holiday_for(self, d: date, city: str) -> bool:
         """Check if a date is a holiday for a specific city."""
         return any(h.date == d and (not h.locations or city in h.locations) for h in self.holidays)
+
 
 # Made with Bob

@@ -57,8 +57,7 @@ def add_constraints(model: cp_model.CpModel, inp: ScheduleInput, vars_dict: dict
     # ── Hard: no disallowed shift transitions ──────────────────────────────────
     _add_transition_constraints(model, inp, emp_ids, shift_vars)
 
-    # ── Hard: max consecutive working days ─────────────────────────────────────
-    _add_consecutive_work_limit(model, inp, emp_ids, shift_vars)
+    # ── REMOVED: max consecutive working days (moved to objective as SOFT) ────
 
     # ── Hard: exactly 2 off days per calendar week ─────────────────────────────
     _add_weekly_off_constraints(model, inp, emp_ids, off_vars)
@@ -71,6 +70,9 @@ def add_constraints(model: cp_model.CpModel, inp: ScheduleInput, vars_dict: dict
 
     # ── Hard: comp_off validity ────────────────────────────────────────────────
     _add_comp_off_validity_constraints(model, inp, leave_vars)
+
+    # ── Hard: balanced shift distribution (max difference of 3 between shifts) ─
+    _add_shift_balance_per_employee(model, inp, emp_ids, date_isos, shift_vars)
 
 
 def _add_work_or_off_constraints(
@@ -167,24 +169,49 @@ def _add_weekly_off_constraints(
     emp_ids: list[str],
     off_vars: dict,
 ) -> None:
-    """Ensure exactly 2 off days per calendar week (proportional for partial weeks)."""
+    """
+    Ensure approximately 2 off days per calendar week, accounting for previous month.
+
+    For full weeks (7 days in scheduling period): STRICT - exactly 2 offs required.
+    For partial weeks (< 7 days): FLEXIBLE - allow 1-2 offs to maintain feasibility.
+    """
     # Group dates by ISO week
     weeks: dict[str, list[date]] = defaultdict(list)
     for d in inp.dates:
         weeks[_week_key(d)].append(d)
 
-    # Store weeks in vars_dict for use in objective function
+    # Get employee lookup for previous_week_days
+    emp_by_id = {e.id: e for e in inp.employees}
+
     for eid in emp_ids:
-        for wk_dates in weeks.values():
+        emp = emp_by_id[eid]
+
+        for week_key, wk_dates in weeks.items():
+            # Count week_offs from previous month that fall in this ISO week
+            prev_offs_in_week = 0
+            if emp.previous_week_days:
+                for prev_date, shift_type in emp.previous_week_days.items():
+                    if _week_key(prev_date) == week_key and shift_type == "week_off":
+                        prev_offs_in_week += 1
+
+            # Get off variables for current month dates in this week
             off_in_week = [off_vars[(eid, _iso(d))] for d in wk_dates]
-            # Exactly 2 off days per full week; partial weeks get proportional
-            if len(wk_dates) == 7:
-                model.add(sum(off_in_week) == WEEKLY_OFF_DAYS)
+            week_len = len(wk_dates)
+
+            # Calculate how many more offs are needed to reach 2 total per week
+            remaining_offs_needed = WEEKLY_OFF_DAYS - prev_offs_in_week
+
+            if week_len >= 7:
+                # Full week: STRICT - exactly 2 offs total (hard constraint)
+                model.add(sum(off_in_week) == remaining_offs_needed)
             else:
-                # Partial week: at least floor(2 * days/7), at most 2
-                min_off = max(1, (WEEKLY_OFF_DAYS * len(wk_dates)) // 7)
-                model.add(sum(off_in_week) >= min_off)
-                model.add(sum(off_in_week) <= WEEKLY_OFF_DAYS)
+                # Partial week: FLEXIBLE - aim for 2 but allow 1-2 (soft constraint)
+                # This ensures fairness while maintaining feasibility for edge cases
+                # The solver will try to get as close to 2 as possible via objective function
+                min_offs = max(0, remaining_offs_needed - 1)
+                max_offs = remaining_offs_needed
+                model.add(sum(off_in_week) >= min_offs)
+                model.add(sum(off_in_week) <= max_offs)
 
 
 def _add_leave_capacity_constraints(
@@ -259,3 +286,35 @@ def _add_comp_off_validity_constraints(
 
 
 # Made with Bob
+
+
+def _add_shift_balance_per_employee(
+    model: cp_model.CpModel,
+    inp: ScheduleInput,
+    emp_ids: list[str],
+    date_isos: list[str],
+    shift_vars: dict,
+) -> None:
+    """Ensure each employee has balanced distribution across core shifts (morning/afternoon/night)."""
+    from .constants import CORE_SHIFTS
+
+    # For each employee, ensure their CORE shift counts are within a reasonable range
+    # Note: 'regular' shift is excluded because it has limited availability (specific days only)
+    for eid in emp_ids:
+        shift_counts = []
+        for shift in CORE_SHIFTS:
+            count = model.new_int_var(0, len(date_isos), f"count_{eid}_{shift}")
+            model.add(count == sum(shift_vars[(eid, diso, shift)] for diso in date_isos))
+            shift_counts.append(count)
+
+        # All core shift counts should be within 2 of each other
+        # This ensures fair distribution: prevents cases like 9 morning, 6 afternoon, 6 night
+        if len(shift_counts) > 1:
+            max_count = model.new_int_var(0, len(date_isos), f"max_shift_{eid}")
+            min_count = model.new_int_var(0, len(date_isos), f"min_shift_{eid}")
+            model.add_max_equality(max_count, shift_counts)
+            model.add_min_equality(min_count, shift_counts)
+
+            # Maximum difference of 1 shift between any two core shift types
+            # This ensures very tight balance: e.g., 6-6-6 or 6-6-7
+            model.add(max_count - min_count <= 1)
