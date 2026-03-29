@@ -6,6 +6,10 @@
     "editor.defaultFormatter": "DavidAnson.vscode-markdownlint"
   },
   "[python]": {
+    "editor.codeActionsOnSave": {
+      "source.fixAll.ruff": "explicit",
+      "source.organizeImports.ruff": "explicit"
+    },
     "editor.defaultFormatter": "charliermarsh.ruff"
   },
   "[toml]": {
