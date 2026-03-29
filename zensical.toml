@@ -8,6 +8,43 @@ copyright = "Copyright &copy; 2026 Rajesh Das"
 
 nav = [
   { Home = "index.md" },
+  { Packages = [
+    { "shiftcraft-core" = [
+      { Overview = "packages/shiftcraft-core/index.md" },
+      { "Input Format" = "packages/shiftcraft-core/input.md" },
+      { "Output Format" = "packages/shiftcraft-core/output.md" },
+      { "API Reference" = "packages/shiftcraft-core/api-reference.md" },
+      { Constraints = [
+        { Overview = "packages/shiftcraft-core/constraints/index.md" },
+        { "Hard Constraints" = [
+          { Overview = "packages/shiftcraft-core/constraints/hard/index.md" },
+          { "One Shift Per Day" = "packages/shiftcraft-core/constraints/hard/one-shift-per-day.md" },
+          { "No Night-to-Morning" = "packages/shiftcraft-core/constraints/hard/no-night-to-morning.md" },
+          { "Two Offs Per Week" = "packages/shiftcraft-core/constraints/hard/two-offs-per-week.md" },
+          { "Min Shift Coverage" = "packages/shiftcraft-core/constraints/hard/min-shift-coverage.md" },
+          { "Max Shift Coverage" = "packages/shiftcraft-core/constraints/hard/max-shift-coverage.md" },
+          { "Max Workers Per Day" = "packages/shiftcraft-core/constraints/hard/max-workers-per-day.md" },
+          { "Date-Range Override" = "packages/shiftcraft-core/constraints/hard/date-range-override.md" },
+          { "Regular Shift Order" = "packages/shiftcraft-core/constraints/hard/regular-shift-order.md" },
+          { "Typed Leave Honored" = "packages/shiftcraft-core/constraints/hard/typed-leave-honored.md" },
+          { "Leave on Requested Dates" = "packages/shiftcraft-core/constraints/hard/leave-on-requested-dates.md" },
+          { "Comp-Off Validity" = "packages/shiftcraft-core/constraints/hard/comp-off-validity.md" },
+          { "Leave Capacity Gate" = "packages/shiftcraft-core/constraints/hard/leave-capacity-gate.md" },
+          { "Core Shift Balance" = "packages/shiftcraft-core/constraints/hard/core-shift-balance.md" },
+        ] },
+        { "Soft Constraints" = [
+          { Overview = "packages/shiftcraft-core/constraints/soft/index.md" },
+          { "Shift Balance" = "packages/shiftcraft-core/constraints/soft/shift-balance.md" },
+          { "Shift Block Stability" = "packages/shiftcraft-core/constraints/soft/shift-block-stability.md" },
+          { "History Bias" = "packages/shiftcraft-core/constraints/soft/history-bias.md" },
+          { "Weekend Off Balance" = "packages/shiftcraft-core/constraints/soft/weekend-off-balance.md" },
+          { "Paired Weekend Offs" = "packages/shiftcraft-core/constraints/soft/paired-weekend-offs.md" },
+          { "Target Coverage" = "packages/shiftcraft-core/constraints/soft/target-coverage.md" },
+          { "Untyped Leave Preference" = "packages/shiftcraft-core/constraints/soft/untyped-leave-preference.md" },
+        ] },
+      ] },
+    ] },
+  ] },
   { Dev = [
     { Setup = "dev/setup/index.md" },
     { "Template Setup" = "dev/setup/from-template.md" },
@@ -94,3 +131,12 @@ custom_fences = [
 
 [project.markdown_extensions.pymdownx.tabbed]
 alternate_style = true
+
+[project.plugins.mkdocstrings.handlers.python]
+inventories = ["https://docs.python.org/3/objects.inv"]
+paths = ["packages/shiftcraft-core/src"]
+
+[project.plugins.mkdocstrings.handlers.python.options]
+docstring_style = "google"
+inherited_members = true
+show_source = false
