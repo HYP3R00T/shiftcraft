@@ -15,7 +15,7 @@ app = FastAPI(
 )
 
 app.add_middleware(
-    CORSMiddleware,
+    CORSMiddleware,  # type: ignore[arg-type]
     allow_origins=["*"],  # tighten this when deploying
     allow_methods=["*"],
     allow_headers=["*"],
