@@ -35,3 +35,7 @@ description = "Run fast tests with coverage report for all packages (fails under
 [tasks.sync]
 run = "uv sync --all-packages"
 description = "Sync all workspace packages and dependencies"
+
+[tasks.docker]
+run = "docker compose up --build"
+description = "Run docker compose"
