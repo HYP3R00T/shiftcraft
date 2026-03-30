@@ -63,7 +63,7 @@ export default function Home() {
                     <Button variant="outline" size="sm" onClick={exportJson} className="gap-1.5">
                         <FileJson className="h-3.5 w-3.5" /> Export JSON
                     </Button>
-                    <Separator orientation="vertical" className="h-5" />
+                    <Separator orientation="vertical" className="!self-auto h-5" />
                     <Button size="sm" onClick={handleGenerate} disabled={loading || input.team.length === 0} className="gap-1.5">
                         {loading ? (
                             <>
