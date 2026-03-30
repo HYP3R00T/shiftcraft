@@ -1,13 +1,7 @@
 import type { EmployeeSummary } from "@/lib/types";
 
 const COLS: (keyof EmployeeSummary)[] = [
-    "morning",
-    "afternoon",
-    "night",
-    "regular",
-    "week_off",
-    "annual",
-    "comp_off",
+    "morning", "afternoon", "night", "regular", "week_off", "annual", "comp_off",
 ];
 
 const COL_LABEL: Record<keyof EmployeeSummary, string> = {
@@ -24,24 +18,24 @@ export function SummaryTable({ summary }: { summary: Record<string, EmployeeSumm
     const employees = Object.keys(summary);
 
     return (
-        <div className="overflow-x-auto rounded-lg border border-zinc-200">
+        <div className="overflow-x-auto rounded-lg border border-zinc-700">
             <table className="min-w-full text-sm">
-                <thead className="bg-zinc-50 border-b border-zinc-200">
+                <thead className="bg-zinc-800/80 border-b border-zinc-700">
                     <tr>
-                        <th className="px-4 py-2 text-left font-medium text-zinc-600">Employee</th>
+                        <th className="px-4 py-2.5 text-left text-xs font-medium text-zinc-400">Employee</th>
                         {COLS.map((col) => (
-                            <th key={col} className="px-4 py-2 text-center font-medium text-zinc-600">
+                            <th key={col} className="px-4 py-2.5 text-center text-xs font-medium text-zinc-400">
                                 {COL_LABEL[col]}
                             </th>
                         ))}
                     </tr>
                 </thead>
-                <tbody className="divide-y divide-zinc-100">
+                <tbody className="divide-y divide-zinc-800">
                     {employees.map((emp) => (
-                        <tr key={emp} className="bg-white hover:bg-zinc-50">
-                            <td className="px-4 py-2 font-medium text-zinc-800">{emp}</td>
+                        <tr key={emp} className="hover:bg-zinc-800/30 transition">
+                            <td className="px-4 py-2.5 font-medium text-zinc-200">{emp}</td>
                             {COLS.map((col) => (
-                                <td key={col} className="px-4 py-2 text-center text-zinc-600">
+                                <td key={col} className="px-4 py-2.5 text-center text-zinc-400 font-mono text-xs">
                                     {summary[emp][col]}
                                 </td>
                             ))}

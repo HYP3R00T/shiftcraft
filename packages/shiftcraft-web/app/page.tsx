@@ -2,73 +2,16 @@
 
 import { useState } from "react";
 import { generateSchedule } from "@/lib/api";
-import type { ScheduleResult } from "@/lib/types";
+import { DEFAULT_INPUT, newEmployee } from "@/lib/defaultInput";
+import type { ScheduleInput, ScheduleResult } from "@/lib/types";
+import { EmployeeEditor } from "./components/EmployeeEditor";
+import { JsonImport } from "./components/JsonImport";
 import { ScheduleTable } from "./components/ScheduleTable";
 import { SummaryTable } from "./components/SummaryTable";
-
-const EXAMPLE_INPUT = {
-    period: { start: "2026-04-01", end: "2026-04-30" },
-    team: [
-        {
-            id: "E001", name: "Alice", is_senior: true, city: "Hyderabad",
-            comp_off_balance: 0,
-            previous_week_days: { "2026-03-30": "afternoon", "2026-03-31": "week_off" },
-            leave_requests: [{ date: "2026-04-05", leave_type: null }],
-            history: {
-                last_month_shift_counts: { morning: 8, afternoon: 5, night: 6, regular: 2, week_off: 9, leave: 1 },
-                comp_off: { remaining_count: 0, records: [] },
-            },
-        },
-        {
-            id: "E002", name: "Bob", is_senior: true, city: "Bengaluru",
-            comp_off_balance: 0,
-            previous_week_days: { "2026-03-30": "morning", "2026-03-31": "regular" },
-            leave_requests: [],
-            history: {
-                last_month_shift_counts: { morning: 6, afternoon: 7, night: 7, regular: 3, week_off: 8, leave: 0 },
-                comp_off: { remaining_count: 0, records: [] },
-            },
-        },
-        {
-            id: "E003", name: "Carol", is_senior: false, city: "Hyderabad",
-            comp_off_balance: 0,
-            previous_week_days: { "2026-03-30": "night", "2026-03-31": "night" },
-            leave_requests: [],
-            history: {
-                last_month_shift_counts: { morning: 3, afternoon: 9, night: 6, regular: 2, week_off: 8, leave: 1 },
-                comp_off: { remaining_count: 0, records: [] },
-            },
-        },
-    ],
-    coverage: {
-        by_day_of_week: Object.fromEntries(
-            ["monday", "tuesday", "wednesday", "thursday", "friday"].map((d) => [
-                d,
-                {
-                    morning: { min: 1, target: 1, max: 1 },
-                    afternoon: { min: 1, target: 1, max: 1 },
-                    night: { min: 1, target: 1, max: 1 },
-                    regular: { min: 0, target: 0, max: 1 },
-                },
-            ]).concat(
-                ["saturday", "sunday"].map((d) => [
-                    d,
-                    {
-                        morning: { min: 1, target: 1, max: 1 },
-                        afternoon: { min: 1, target: 1, max: 1 },
-                        night: { min: 1, target: 1, max: 1 },
-                        regular: { min: 0, target: 0, max: 0 },
-                    },
-                ])
-            )
-        ),
-        by_date_range: [],
-    },
-    holidays: [],
-};
+import { Btn, Field, Input, SectionTitle } from "./components/ui";
 
 export default function Home() {
-    const [input, setInput] = useState(JSON.stringify(EXAMPLE_INPUT, null, 2));
+    const [input, setInput] = useState<ScheduleInput>(DEFAULT_INPUT);
     const [result, setResult] = useState<ScheduleResult | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
@@ -79,8 +22,7 @@ export default function Home() {
         setResult(null);
         setLoading(true);
         try {
-            const payload = JSON.parse(input);
-            const res = await generateSchedule(payload);
+            const res = await generateSchedule(input);
             setResult(res);
             setTab("schedule");
         } catch (e) {
@@ -90,97 +32,184 @@ export default function Home() {
         }
     }
 
+    function addEmployee() {
+        setInput((prev) => ({
+            ...prev,
+            team: [...prev.team, newEmployee(prev.team.length + 1)],
+        }));
+    }
+
+    function updateEmployee(i: number, emp: ScheduleInput["team"][number]) {
+        setInput((prev) => {
+            const team = [...prev.team];
+            team[i] = emp;
+            return { ...prev, team };
+        });
+    }
+
+    function removeEmployee(i: number) {
+        setInput((prev) => ({
+            ...prev,
+            team: prev.team.filter((_, idx) => idx !== i),
+        }));
+    }
+
     const isSuccess = result && (result.status === "ok" || result.status === "feasible");
 
     return (
-        <div className="min-h-screen bg-zinc-50 font-sans">
+        <div className="flex flex-col min-h-screen bg-[#0f1117]">
             {/* Header */}
-            <header className="border-b border-zinc-200 bg-white px-6 py-4">
-                <div className="mx-auto max-w-7xl flex items-center justify-between">
-                    <div>
-                        <h1 className="text-lg font-semibold text-zinc-900">Shiftcraft</h1>
-                        <p className="text-xs text-zinc-500">Constraint-driven workforce scheduler</p>
-                    </div>
-                    {result && isSuccess && (
-                        <span className="text-xs text-zinc-500">
-                            Penalty score: <span className="font-mono font-medium text-zinc-700">{result.penalty}</span>
-                            {result.status === "feasible" && (
-                                <span className="ml-2 rounded bg-amber-100 px-1.5 py-0.5 text-amber-700">feasible</span>
-                            )}
-                            {result.status === "ok" && (
-                                <span className="ml-2 rounded bg-green-100 px-1.5 py-0.5 text-green-700">optimal</span>
-                            )}
-                        </span>
-                    )}
+            <header className="border-b border-zinc-800 bg-zinc-900/60 px-6 py-3 flex items-center justify-between shrink-0">
+                <div className="flex items-center gap-3">
+                    <span className="text-base font-semibold text-zinc-100">Shiftcraft</span>
+                    <span className="text-xs text-zinc-600">workforce scheduler</span>
+                </div>
+                <div className="flex items-center gap-2">
+                    <JsonImport onImport={(parsed) => { setInput(parsed); setResult(null); }} />
+                    <Btn onClick={handleGenerate} disabled={loading || input.team.length === 0}>
+                        {loading ? "Generating…" : "Generate Schedule"}
+                    </Btn>
                 </div>
             </header>
 
-            <main className="mx-auto max-w-7xl px-6 py-8 space-y-6">
-                {/* Input panel */}
-                <div className="rounded-lg border border-zinc-200 bg-white overflow-hidden">
-                    <div className="flex items-center justify-between border-b border-zinc-100 px-4 py-3">
-                        <span className="text-sm font-medium text-zinc-700">Input JSON</span>
-                        <button
-                            onClick={handleGenerate}
-                            disabled={loading}
-                            className="rounded-md bg-zinc-900 px-4 py-1.5 text-sm font-medium text-white transition hover:bg-zinc-700 disabled:opacity-50"
-                        >
-                            {loading ? "Generating…" : "Generate Schedule"}
-                        </button>
+            {/* Body */}
+            <div className="flex flex-1 overflow-hidden">
+                {/* Left: Input panel */}
+                <div className="w-[420px] shrink-0 border-r border-zinc-800 overflow-y-auto p-5 space-y-6">
+
+                    {/* Period */}
+                    <div>
+                        <SectionTitle>Period</SectionTitle>
+                        <div className="grid grid-cols-2 gap-3">
+                            <Field label="Start date">
+                                <Input
+                                    type="date"
+                                    value={input.period.start}
+                                    onChange={(e) =>
+                                        setInput((p) => ({ ...p, period: { ...p.period, start: e.target.value } }))
+                                    }
+                                />
+                            </Field>
+                            <Field label="End date">
+                                <Input
+                                    type="date"
+                                    value={input.period.end}
+                                    onChange={(e) =>
+                                        setInput((p) => ({ ...p, period: { ...p.period, end: e.target.value } }))
+                                    }
+                                />
+                            </Field>
+                        </div>
                     </div>
-                    <textarea
-                        value={input}
-                        onChange={(e) => setInput(e.target.value)}
-                        spellCheck={false}
-                        className="w-full resize-none bg-zinc-950 p-4 font-mono text-xs text-zinc-200 outline-none"
-                        rows={20}
-                    />
+
+                    {/* Team */}
+                    <div>
+                        <div className="flex items-center justify-between mb-3">
+                            <SectionTitle>Team ({input.team.length})</SectionTitle>
+                            <Btn variant="ghost" onClick={addEmployee} className="text-xs py-1 px-2">
+                                + Add employee
+                            </Btn>
+                        </div>
+                        {input.team.length === 0 ? (
+                            <div className="rounded-lg border border-dashed border-zinc-700 p-6 text-center">
+                                <p className="text-sm text-zinc-500">No employees yet.</p>
+                                <p className="text-xs text-zinc-600 mt-1">
+                                    Add employees manually or import a JSON file.
+                                </p>
+                            </div>
+                        ) : (
+                            <div className="space-y-3">
+                                {input.team.map((emp, i) => (
+                                    <EmployeeEditor
+                                        key={emp.id + i}
+                                        employee={emp}
+                                        onChange={(updated) => updateEmployee(i, updated)}
+                                        onRemove={() => removeEmployee(i)}
+                                    />
+                                ))}
+                            </div>
+                        )}
+                    </div>
                 </div>
 
-                {/* Error */}
-                {error && (
-                    <div className="rounded-lg border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
-                        {error}
-                    </div>
-                )}
-
-                {/* Infeasible */}
-                {result && result.status === "infeasible" && (
-                    <div className="rounded-lg border border-rose-200 bg-rose-50 px-4 py-3 space-y-2">
-                        <p className="text-sm font-medium text-rose-700">No valid schedule found</p>
-                        <ul className="list-disc pl-5 space-y-1">
-                            {result.conflicts?.map((c, i) => (
-                                <li key={i} className="text-xs text-rose-600">{c}</li>
-                            ))}
-                        </ul>
-                    </div>
-                )}
-
-                {/* Results */}
-                {isSuccess && result.schedule && result.summary && (
-                    <div className="rounded-lg border border-zinc-200 bg-white overflow-hidden">
-                        {/* Tabs */}
-                        <div className="flex border-b border-zinc-100">
-                            {(["schedule", "summary"] as const).map((t) => (
-                                <button
-                                    key={t}
-                                    onClick={() => setTab(t)}
-                                    className={`px-5 py-3 text-sm font-medium capitalize transition ${tab === t
-                                            ? "border-b-2 border-zinc-900 text-zinc-900"
-                                            : "text-zinc-500 hover:text-zinc-700"
-                                        }`}
-                                >
-                                    {t}
-                                </button>
-                            ))}
+                {/* Right: Results panel */}
+                <div className="flex-1 overflow-y-auto p-5">
+                    {!result && !error && !loading && (
+                        <div className="flex flex-col items-center justify-center h-full text-center gap-3">
+                            <div className="text-4xl">📅</div>
+                            <p className="text-zinc-400 text-sm">
+                                Configure your team on the left, then click Generate Schedule.
+                            </p>
+                            <p className="text-zinc-600 text-xs">
+                                Or use Import JSON to load an existing payload.
+                            </p>
                         </div>
-                        <div className="p-4">
+                    )}
+
+                    {loading && (
+                        <div className="flex items-center justify-center h-full">
+                            <p className="text-zinc-400 text-sm animate-pulse">Solving schedule…</p>
+                        </div>
+                    )}
+
+                    {error && (
+                        <div className="rounded-lg border border-rose-800 bg-rose-950/40 px-4 py-3 text-sm text-rose-400">
+                            {error}
+                        </div>
+                    )}
+
+                    {result?.status === "infeasible" && (
+                        <div className="rounded-lg border border-rose-800 bg-rose-950/40 px-4 py-4 space-y-3">
+                            <p className="text-sm font-medium text-rose-400">No valid schedule found</p>
+                            <ul className="list-disc pl-5 space-y-1">
+                                {result.conflicts?.map((c, i) => (
+                                    <li key={i} className="text-xs text-rose-500">{c}</li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
+
+                    {isSuccess && result.schedule && result.summary && (
+                        <div className="space-y-4">
+                            {/* Status bar */}
+                            <div className="flex items-center gap-3">
+                                {result.status === "ok" ? (
+                                    <span className="rounded bg-emerald-900/50 px-2 py-1 text-xs font-medium text-emerald-400">
+                                        Optimal
+                                    </span>
+                                ) : (
+                                    <span className="rounded bg-amber-900/50 px-2 py-1 text-xs font-medium text-amber-400">
+                                        Feasible
+                                    </span>
+                                )}
+                                <span className="text-xs text-zinc-500">
+                                    Penalty score:{" "}
+                                    <span className="font-mono text-zinc-300">{result.penalty}</span>
+                                </span>
+                            </div>
+
+                            {/* Tabs */}
+                            <div className="flex border-b border-zinc-800">
+                                {(["schedule", "summary"] as const).map((t) => (
+                                    <button
+                                        key={t}
+                                        onClick={() => setTab(t)}
+                                        className={`px-4 py-2 text-sm font-medium capitalize transition ${tab === t
+                                                ? "border-b-2 border-zinc-200 text-zinc-100"
+                                                : "text-zinc-500 hover:text-zinc-300"
+                                            }`}
+                                    >
+                                        {t}
+                                    </button>
+                                ))}
+                            </div>
+
                             {tab === "schedule" && <ScheduleTable schedule={result.schedule} />}
                             {tab === "summary" && <SummaryTable summary={result.summary} />}
                         </div>
-                    </div>
-                )}
-            </main>
+                    )}
+                </div>
+            </div>
         </div>
     );
 }
