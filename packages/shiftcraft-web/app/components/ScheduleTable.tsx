@@ -1,32 +1,29 @@
+import { Badge } from "@/components/ui/badge";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import type { DayEntry, ShiftType } from "@/lib/types";
 
 const SHIFT_STYLES: Record<ShiftType, string> = {
-    morning: "bg-amber-900/50 text-amber-300",
-    afternoon: "bg-blue-900/50 text-blue-300",
-    night: "bg-indigo-900/50 text-indigo-300",
-    regular: "bg-emerald-900/50 text-emerald-300",
-    week_off: "bg-zinc-800 text-zinc-500",
-    annual: "bg-rose-900/50 text-rose-300",
-    comp_off: "bg-purple-900/50 text-purple-300",
+    morning: "bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300",
+    afternoon: "bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300",
+    night: "bg-indigo-100 text-indigo-800 dark:bg-indigo-900/40 dark:text-indigo-300",
+    regular: "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300",
+    week_off: "bg-muted text-muted-foreground",
+    annual: "bg-rose-100 text-rose-800 dark:bg-rose-900/40 dark:text-rose-300",
+    comp_off: "bg-purple-100 text-purple-800 dark:bg-purple-900/40 dark:text-purple-300",
 };
 
 const SHIFT_LABEL: Record<ShiftType, string> = {
-    morning: "M",
-    afternoon: "A",
-    night: "N",
-    regular: "R",
-    week_off: "WO",
-    annual: "AL",
-    comp_off: "CO",
+    morning: "M", afternoon: "A", night: "N", regular: "R",
+    week_off: "WO", annual: "AL", comp_off: "CO",
 };
 
 function ShiftBadge({ shift }: { shift: string }) {
-    const style = SHIFT_STYLES[shift as ShiftType] ?? "bg-zinc-800 text-zinc-400";
+    const style = SHIFT_STYLES[shift as ShiftType] ?? "bg-muted text-muted-foreground";
     const label = SHIFT_LABEL[shift as ShiftType] ?? shift;
     return (
-        <span className={`inline-block rounded px-1.5 py-0.5 text-xs font-semibold ${style}`}>
+        <Badge variant="outline" className={`text-xs font-semibold border-0 ${style}`}>
             {label}
-        </span>
+        </Badge>
     );
 }
 
@@ -40,27 +37,27 @@ export function ScheduleTable({ schedule }: { schedule: DayEntry[] }) {
     const employees = Object.keys(schedule[0]).filter((k) => k !== "date");
 
     return (
-        <div className="overflow-x-auto rounded-lg border border-zinc-700">
+        <ScrollArea className="rounded-md border">
             <table className="min-w-full text-sm">
-                <thead className="bg-zinc-800/80 border-b border-zinc-700">
+                <thead className="bg-muted/50 border-b">
                     <tr>
-                        <th className="sticky left-0 bg-zinc-800 px-4 py-2.5 text-left text-xs font-medium text-zinc-400 whitespace-nowrap">
+                        <th className="sticky left-0 bg-muted/50 px-4 py-2.5 text-left text-xs font-medium text-muted-foreground whitespace-nowrap">
                             Date
                         </th>
                         {employees.map((emp) => (
-                            <th key={emp} className="px-4 py-2.5 text-center text-xs font-medium text-zinc-400 whitespace-nowrap">
+                            <th key={emp} className="px-4 py-2.5 text-center text-xs font-medium text-muted-foreground whitespace-nowrap">
                                 {emp}
                             </th>
                         ))}
                     </tr>
                 </thead>
-                <tbody className="divide-y divide-zinc-800">
+                <tbody className="divide-y divide-border">
                     {schedule.map((day) => {
                         const d = new Date(day.date + "T00:00:00");
                         const isWeekend = d.getDay() === 0 || d.getDay() === 6;
                         return (
-                            <tr key={day.date} className={isWeekend ? "bg-zinc-800/30" : "bg-transparent"}>
-                                <td className="sticky left-0 bg-[#0f1117] px-4 py-2 font-mono text-xs text-zinc-500 whitespace-nowrap">
+                            <tr key={day.date} className={isWeekend ? "bg-muted/20" : ""}>
+                                <td className="sticky left-0 bg-background px-4 py-2 font-mono text-xs text-muted-foreground whitespace-nowrap">
                                     {formatDate(day.date)}
                                 </td>
                                 {employees.map((emp) => (
@@ -73,6 +70,7 @@ export function ScheduleTable({ schedule }: { schedule: DayEntry[] }) {
                     })}
                 </tbody>
             </table>
-        </div>
+            <ScrollBar orientation="horizontal" />
+        </ScrollArea>
     );
 }
