@@ -6,6 +6,7 @@ ruff = "latest"
 prek = "latest"
 gitleaks = "latest"
 shellcheck = "latest"
+pnpm = "latest"
 
 [settings]
 experimental = true
