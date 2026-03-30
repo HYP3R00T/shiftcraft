@@ -60,7 +60,7 @@ def add_constraints(model: cp_model.CpModel, inp: ScheduleInput, vars_dict: dict
     # ── REMOVED: max consecutive working days (moved to objective as SOFT) ────
 
     # ── Hard: exactly 2 off days per calendar week ─────────────────────────────
-    _add_weekly_off_constraints(model, inp, emp_ids, off_vars)
+    _add_weekly_off_constraints(model, inp, emp_ids, off_vars, leave_vars)
 
     # ── Hard: leave capacity gate per day ──────────────────────────────────────
     _add_leave_capacity_constraints(model, inp, emp_ids, off_vars)
@@ -138,6 +138,24 @@ def _add_transition_constraints(
     shift_vars: dict,
 ) -> None:
     """Prevent disallowed shift transitions (e.g., Night → Morning)."""
+    emp_by_id = {e.id: e for e in inp.employees}
+    first_diso = _iso(inp.dates[0])
+
+    # Cross-month boundary: check last day of previous_week_days → first day of period
+    for eid in emp_ids:
+        emp = emp_by_id[eid]
+        if emp.previous_week_days:
+            # Find the date immediately before period_start
+            from datetime import timedelta
+
+            prev_day = inp.period_start - timedelta(days=1)
+            prev_shift = emp.previous_week_days.get(prev_day)
+            if prev_shift:
+                for s_from, s_to in DISALLOWED_TRANSITIONS:
+                    if prev_shift == s_from:
+                        model.add(shift_vars[(eid, first_diso, s_to)] == 0)
+
+    # Within-period transitions
     for i in range(len(inp.dates) - 1):
         d0, d1 = inp.dates[i], inp.dates[i + 1]
         d0iso, d1iso = _iso(d0), _iso(d1)
@@ -168,19 +186,27 @@ def _add_weekly_off_constraints(
     inp: ScheduleInput,
     emp_ids: list[str],
     off_vars: dict,
+    leave_vars: dict,
 ) -> None:
     """
-    Ensure approximately 2 off days per calendar week, accounting for previous month.
+    Ensure exactly 2 week_off days per calendar week, accounting for previous month.
 
-    For full weeks (7 days in scheduling period): STRICT - exactly 2 offs required.
-    For partial weeks (< 7 days): FLEXIBLE - allow 1-2 offs to maintain feasibility.
+    Annual leave and comp_off do NOT count toward the weekly off quota — only
+    explicit week_off assignments do. This ensures employees always get their
+    2 rest days regardless of any leave taken that week.
+
+    For full weeks (7 days in scheduling period): STRICT - exactly 2 week_offs required.
+    For partial weeks at period start (prev offs known): enforce remaining exactly.
+    For partial weeks at period end (rest of week in next month): flexible ±1.
     """
-    # Group dates by ISO week
     weeks: dict[str, list[date]] = defaultdict(list)
     for d in inp.dates:
         weeks[_week_key(d)].append(d)
 
-    # Get employee lookup for previous_week_days
+    # Identify which weeks are partial at the start vs end of the period
+    first_week_key = _week_key(inp.period_start)
+    last_week_key = _week_key(inp.period_end)
+
     emp_by_id = {e.id: e for e in inp.employees}
 
     for eid in emp_ids:
@@ -194,24 +220,25 @@ def _add_weekly_off_constraints(
                     if _week_key(prev_date) == week_key and shift_type == "week_off":
                         prev_offs_in_week += 1
 
-            # Get off variables for current month dates in this week
-            off_in_week = [off_vars[(eid, _iso(d))] for d in wk_dates]
+            # Only count week_off leave type — NOT annual or comp_off
+            week_off_in_week = [leave_vars[(eid, _iso(d), "week_off")] for d in wk_dates]
             week_len = len(wk_dates)
-
-            # Calculate how many more offs are needed to reach 2 total per week
             remaining_offs_needed = WEEKLY_OFF_DAYS - prev_offs_in_week
 
             if week_len >= 7:
-                # Full week: STRICT - exactly 2 offs total (hard constraint)
-                model.add(sum(off_in_week) == remaining_offs_needed)
-            else:
-                # Partial week: FLEXIBLE - aim for 2 but allow 1-2 (soft constraint)
-                # This ensures fairness while maintaining feasibility for edge cases
-                # The solver will try to get as close to 2 as possible via objective function
-                min_offs = max(0, remaining_offs_needed - 1)
-                max_offs = remaining_offs_needed
-                model.add(sum(off_in_week) >= min_offs)
-                model.add(sum(off_in_week) <= max_offs)
+                # Full week: exactly 2 week_offs (hard)
+                model.add(sum(week_off_in_week) == remaining_offs_needed)
+            elif week_key == first_week_key:
+                # Partial week at period START: we know all previous offs,
+                # so enforce exactly the remaining count needed
+                capped = min(remaining_offs_needed, week_len)
+                if capped > 0:
+                    model.add(sum(week_off_in_week) == capped)
+            elif week_key == last_week_key:
+                # Partial week at period END: rest of week spills into next month,
+                # be flexible to avoid impossible constraints when days are scarce
+                model.add(sum(week_off_in_week) >= max(0, remaining_offs_needed - 1))
+                model.add(sum(week_off_in_week) <= remaining_offs_needed)
 
 
 def _add_leave_capacity_constraints(
