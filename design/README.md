@@ -10,14 +10,16 @@ user-facing docs site.
 | `problem.md` | Problem statement and constraint taxonomy |
 | `architecture.md` | System shape, components, data flow, cross-cutting concerns |
 | `adr/` | Architecture decision records — one file per decision |
-| `services/<name>/` | Design docs scoped to a specific service |
+| `services/core/` | Design docs for shiftcraft-core (solver engine) |
+| `services/api/` | Design docs for shiftcraft-api |
+| `services/web/` | Design docs for shiftcraft-web |
 
 ## Reading order
 
 1. `problem.md` — understand the problem space
 2. `architecture.md` — understand the system shape
 3. `adr/` — understand why key decisions were made
-4. `services/<name>/` — understand a specific service in detail
+4. `services/<name>/` — understand a specific service
 
 ---
 
