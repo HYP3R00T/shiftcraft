@@ -1,0 +1,548 @@
+{
+  "shifts": [
+    "morning",
+    "afternoon",
+    "night",
+    "regular"
+  ],
+  "leave_types": [
+    "week_off",
+    "annual",
+    "comp_off",
+    "public_holiday"
+  ],
+  "solver": {
+    "time_limit_seconds": 60,
+    "log_progress": false
+  },
+  "rules": [
+    {
+      "id": "rule-000",
+      "label": "public_holiday blocked — no public holidays declared in this period",
+      "type": "value_exclusion",
+      "values": [
+        "public_holiday"
+      ],
+      "scope": {
+        "who": {
+          "type": "all"
+        },
+        "when": {
+          "type": "always"
+        }
+      },
+      "enforcement": "hard"
+    },
+    {
+      "id": "rule-000b",
+      "label": "Amogha: annual leave capped at 4 days (number of requested dates)",
+      "type": "count_per_period",
+      "value": "annual",
+      "operator": "<=",
+      "count": 4,
+      "scope": {
+        "who": {
+          "type": "employees",
+          "ids": [
+            "E001"
+          ]
+        },
+        "when": {
+          "type": "always"
+        }
+      },
+      "enforcement": "hard"
+    },
+    {
+      "id": "rule-000c",
+      "label": "Basheer: annual leave capped at 1 day",
+      "type": "count_per_period",
+      "value": "annual",
+      "operator": "<=",
+      "count": 1,
+      "scope": {
+        "who": {
+          "type": "employees",
+          "ids": [
+            "E003"
+          ]
+        },
+        "when": {
+          "type": "always"
+        }
+      },
+      "enforcement": "hard"
+    },
+    {
+      "id": "rule-000d",
+      "label": "Pavani: annual leave capped at 2 days",
+      "type": "count_per_period",
+      "value": "annual",
+      "operator": "<=",
+      "count": 2,
+      "scope": {
+        "who": {
+          "type": "employees",
+          "ids": [
+            "E005"
+          ]
+        },
+        "when": {
+          "type": "always"
+        }
+      },
+      "enforcement": "hard"
+    },
+    {
+      "id": "rule-000e",
+      "label": "Suchi and Anuhya: no annual leave this period (no requests made)",
+      "type": "count_per_period",
+      "value": "annual",
+      "operator": "<=",
+      "count": 0,
+      "scope": {
+        "who": {
+          "type": "employees",
+          "ids": [
+            "E002",
+            "E004"
+          ]
+        },
+        "when": {
+          "type": "always"
+        }
+      },
+      "enforcement": "hard"
+    },
+    {
+      "id": "rule-001",
+      "label": "Exactly 2 week-offs per ISO calendar week",
+      "type": "count_per_week",
+      "value": "week_off",
+      "operator": "==",
+      "count": 2,
+      "scope": {
+        "who": {
+          "type": "all"
+        },
+        "when": {
+          "type": "always"
+        }
+      },
+      "enforcement": "hard"
+    },
+    {
+      "id": "rule-001b",
+      "label": "At most 2 people on any off state on any given day",
+      "type": "daily_count",
+      "value": [
+        "week_off",
+        "annual",
+        "comp_off",
+        "public_holiday"
+      ],
+      "operator": "<=",
+      "count": 2,
+      "scope": {
+        "who": {
+          "type": "all"
+        },
+        "when": {
+          "type": "always"
+        }
+      },
+      "enforcement": "hard"
+    },
+    {
+      "id": "rule-002",
+      "label": "No night shift followed by morning shift the next day",
+      "type": "pair_sequence",
+      "from_value": "night",
+      "to_value": "morning",
+      "gap_days": 1,
+      "forbidden": true,
+      "scope": {
+        "who": {
+          "type": "all"
+        },
+        "when": {
+          "type": "always"
+        }
+      },
+      "enforcement": "hard"
+    },
+    {
+      "id": "rule-003",
+      "label": "At least 1 morning shift per day (Mon–Fri)",
+      "type": "daily_count",
+      "value": "morning",
+      "operator": ">=",
+      "count": 1,
+      "scope": {
+        "who": {
+          "type": "all"
+        },
+        "when": {
+          "type": "day_of_week",
+          "values": [
+            "monday",
+            "tuesday",
+            "wednesday",
+            "thursday",
+            "friday"
+          ]
+        }
+      },
+      "enforcement": "hard"
+    },
+    {
+      "id": "rule-004",
+      "label": "At least 1 afternoon shift per day (Mon–Fri)",
+      "type": "daily_count",
+      "value": "afternoon",
+      "operator": ">=",
+      "count": 1,
+      "scope": {
+        "who": {
+          "type": "all"
+        },
+        "when": {
+          "type": "day_of_week",
+          "values": [
+            "monday",
+            "tuesday",
+            "wednesday",
+            "thursday",
+            "friday"
+          ]
+        }
+      },
+      "enforcement": "hard"
+    },
+    {
+      "id": "rule-005",
+      "label": "At least 1 night shift per day (Mon–Fri)",
+      "type": "daily_count",
+      "value": "night",
+      "operator": ">=",
+      "count": 1,
+      "scope": {
+        "who": {
+          "type": "all"
+        },
+        "when": {
+          "type": "day_of_week",
+          "values": [
+            "monday",
+            "tuesday",
+            "wednesday",
+            "thursday",
+            "friday"
+          ]
+        }
+      },
+      "enforcement": "hard"
+    },
+    {
+      "id": "rule-006",
+      "label": "At most 1 regular shift per day (Mon–Fri)",
+      "type": "daily_count",
+      "value": "regular",
+      "operator": "<=",
+      "count": 1,
+      "scope": {
+        "who": {
+          "type": "all"
+        },
+        "when": {
+          "type": "day_of_week",
+          "values": [
+            "monday",
+            "tuesday",
+            "wednesday",
+            "thursday",
+            "friday"
+          ]
+        }
+      },
+      "enforcement": "hard"
+    },
+    {
+      "id": "rule-007",
+      "label": "At least 1 morning shift per day (weekends)",
+      "type": "daily_count",
+      "value": "morning",
+      "operator": ">=",
+      "count": 1,
+      "scope": {
+        "who": {
+          "type": "all"
+        },
+        "when": {
+          "type": "day_type",
+          "value": "weekend"
+        }
+      },
+      "enforcement": "hard"
+    },
+    {
+      "id": "rule-008",
+      "label": "At least 1 afternoon shift per day (weekends)",
+      "type": "daily_count",
+      "value": "afternoon",
+      "operator": ">=",
+      "count": 1,
+      "scope": {
+        "who": {
+          "type": "all"
+        },
+        "when": {
+          "type": "day_type",
+          "value": "weekend"
+        }
+      },
+      "enforcement": "hard"
+    },
+    {
+      "id": "rule-009",
+      "label": "At least 1 night shift per day (weekends)",
+      "type": "daily_count",
+      "value": "night",
+      "operator": ">=",
+      "count": 1,
+      "scope": {
+        "who": {
+          "type": "all"
+        },
+        "when": {
+          "type": "day_type",
+          "value": "weekend"
+        }
+      },
+      "enforcement": "hard"
+    },
+    {
+      "id": "rule-010",
+      "label": "No regular shift on weekends",
+      "type": "daily_count",
+      "value": "regular",
+      "operator": "==",
+      "count": 0,
+      "scope": {
+        "who": {
+          "type": "all"
+        },
+        "when": {
+          "type": "day_type",
+          "value": "weekend"
+        }
+      },
+      "enforcement": "hard"
+    },
+    {
+      "id": "rule-011",
+      "label": "April 30 requires exactly 1 regular shift (month-end override)",
+      "type": "daily_count",
+      "value": "regular",
+      "operator": "==",
+      "count": 1,
+      "scope": {
+        "who": {
+          "type": "all"
+        },
+        "when": {
+          "type": "dates",
+          "values": [
+            "2026-04-30"
+          ]
+        }
+      },
+      "enforcement": "hard"
+    },
+    {
+      "id": "rule-012",
+      "label": "Comp-off usage bounded by each employee's earned balance",
+      "type": "count_bounded_by_balance",
+      "value": "comp_off",
+      "balance_source": {
+        "type": "numeric",
+        "key": "comp_off"
+      },
+      "scope": {
+        "who": {
+          "type": "all"
+        },
+        "when": {
+          "type": "always"
+        }
+      },
+      "enforcement": "hard"
+    },
+    {
+      "id": "rule-013",
+      "label": "Amogha: prefers day off on Apr 5",
+      "type": "value_assignment",
+      "value": "annual",
+      "scope": {
+        "who": {
+          "type": "employees",
+          "ids": [
+            "E001"
+          ]
+        },
+        "when": {
+          "type": "dates",
+          "values": [
+            "2026-04-05"
+          ]
+        }
+      },
+      "enforcement": "preference"
+    },
+    {
+      "id": "rule-014",
+      "label": "Amogha: prefers days off Apr 18–19",
+      "type": "value_assignment",
+      "value": "annual",
+      "scope": {
+        "who": {
+          "type": "employees",
+          "ids": [
+            "E001"
+          ]
+        },
+        "when": {
+          "type": "dates",
+          "values": [
+            "2026-04-18",
+            "2026-04-19"
+          ]
+        }
+      },
+      "enforcement": "preference"
+    },
+    {
+      "id": "rule-015",
+      "label": "Amogha: prefers day off on Apr 23",
+      "type": "value_assignment",
+      "value": "annual",
+      "scope": {
+        "who": {
+          "type": "employees",
+          "ids": [
+            "E001"
+          ]
+        },
+        "when": {
+          "type": "dates",
+          "values": [
+            "2026-04-23"
+          ]
+        }
+      },
+      "enforcement": "preference"
+    },
+    {
+      "id": "rule-016",
+      "label": "Pavani: prefers days off Apr 3–4",
+      "type": "value_assignment",
+      "value": "annual",
+      "scope": {
+        "who": {
+          "type": "employees",
+          "ids": [
+            "E005"
+          ]
+        },
+        "when": {
+          "type": "dates",
+          "values": [
+            "2026-04-03",
+            "2026-04-04"
+          ]
+        }
+      },
+      "enforcement": "preference"
+    },
+    {
+      "id": "rule-017",
+      "label": "Basheer: prefers day off on Apr 28",
+      "type": "value_assignment",
+      "value": "annual",
+      "scope": {
+        "who": {
+          "type": "employees",
+          "ids": [
+            "E003"
+          ]
+        },
+        "when": {
+          "type": "dates",
+          "values": [
+            "2026-04-28"
+          ]
+        }
+      },
+      "enforcement": "preference"
+    },
+    {
+      "id": "rule-018",
+      "label": "Prefer even spread of morning/afternoon/night per employee",
+      "type": "spread_per_employee",
+      "values": [
+        "morning",
+        "afternoon",
+        "night"
+      ],
+      "max_diff": 2,
+      "scope": {
+        "who": {
+          "type": "all"
+        },
+        "when": {
+          "type": "always"
+        }
+      },
+      "enforcement": "soft",
+      "weight": "medium"
+    },
+    {
+      "id": "rule-019",
+      "label": "Prefer equal night shift distribution across the team",
+      "type": "spread_across_team",
+      "value": "night",
+      "max_diff": 2,
+      "scope": {
+        "who": {
+          "type": "all"
+        },
+        "when": {
+          "type": "always"
+        }
+      },
+      "enforcement": "soft",
+      "weight": "medium"
+    },
+    {
+      "id": "rule-020",
+      "label": "Prefer equal weekend off distribution across the team",
+      "type": "spread_across_team",
+      "value": "week_off",
+      "max_diff": 1,
+      "count_when": {
+        "type": "day_type",
+        "value": "weekend"
+      },
+      "scope": {
+        "who": {
+          "type": "all"
+        },
+        "when": {
+          "type": "always"
+        }
+      },
+      "enforcement": "soft",
+      "weight": "low"
+    }
+  ]
+}
