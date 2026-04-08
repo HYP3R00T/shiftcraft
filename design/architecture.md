@@ -4,8 +4,8 @@ Shiftcraft is a data-driven scheduling engine. Business rules are expressed
 as JSON rule descriptors. The solver reads them and emits CP-SAT constraints.
 No code changes are needed when rules change.
 
-See [design/problem.md](problem.md) for the problem definition and constraint
-taxonomy. See [design/design/constraint-primitives.md](design/constraint-primitives.md)
+See [problem.md](problem.md) for the problem definition and constraint
+taxonomy. See [services/core/constraint-primitives.md](services/core/constraint-primitives.md)
 for the full primitive specification.
 
 ---
