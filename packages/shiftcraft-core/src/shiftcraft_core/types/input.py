@@ -31,6 +31,11 @@ class Employee:
 
     ``attributes`` is a free-form map used only for rule targeting (WHO scope).
     The engine never inspects specific attribute keys — rules do.
+
+    ``previous_week_days`` carries the literal assignments for days before the
+    period start that fall in the same ISO week as the first period day.
+    Used by ``count_per_week`` to correctly enforce weekly counts on the
+    boundary week.  Keys are dates, values are state names.
     """
 
     id: str
@@ -41,6 +46,9 @@ class Employee:
     # Earned records keyed by state name, e.g. {"comp_off": [...]}.
     records: dict[str, list[dict[str, str]]] = field(default_factory=dict)
     history: EmployeeHistory = field(default_factory=EmployeeHistory)
+    # Assignments from days before the period that share the same ISO week.
+    # e.g. {"2026-03-30": "afternoon", "2026-03-31": "week_off"}
+    previous_week_days: dict[date, str] = field(default_factory=dict)
 
 
 @dataclass(frozen=True)

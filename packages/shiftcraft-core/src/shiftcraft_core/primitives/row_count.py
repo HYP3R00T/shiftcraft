@@ -42,14 +42,51 @@ def handle_count_per_week(
         by_week[week_key(d)].append(d)
 
     for emp in employees:
-        for week_dates in by_week.values():
-            # Skip partial weeks that cannot satisfy >= or == thresholds.
-            if operator in ("==", ">=") and len(week_dates) < count:
-                continue
+        for wk, week_dates in by_week.items():
+            is_full_week = len(week_dates) == 7
+
+            # For a partial week, check previous_week_days to find how many of
+            # `value` the employee already has from prior days in the same ISO
+            # week.  Those days are fixed history — subtract from the threshold.
+            prior_count = 0
+            has_prior_data = False
+            if not is_full_week:
+                for prior_date, prior_state in emp.previous_week_days.items():
+                    if week_key(prior_date) == wk:
+                        has_prior_data = True
+                        if prior_state == value:
+                            prior_count += 1
+
+            # Adjust the effective threshold by what's already committed.
+            remaining = count - prior_count
+
+            if not is_full_week:
+                if remaining <= 0:
+                    # Already satisfied by prior days — no constraint needed.
+                    continue
+                if operator == ">=" and len(week_dates) < remaining:
+                    # Not enough days left to reach the threshold — skip.
+                    continue
+                if operator == "==" and has_prior_data:
+                    # We know exactly how many prior days contributed — enforce
+                    # the exact remainder on the in-period days.
+                    effective_operator = "=="
+                elif operator == "==":
+                    # No prior data: relax to <= so we don't over-constrain.
+                    effective_operator = "<="
+                else:
+                    effective_operator = operator
+                effective_count = remaining
+            else:
+                effective_operator = operator
+                effective_count = count
+
             expr = cp_model.LinearExpr.sum([
                 x[(emp.id, iso(d), value)] for d in week_dates if (emp.id, iso(d), value) in x
             ])
-            apply_count_constraint(model, expr, operator, count, rule.enforcement, penalty, vars_dict)
+            apply_count_constraint(
+                model, expr, effective_operator, effective_count, rule.enforcement, penalty, vars_dict
+            )
 
 
 # ── count_per_window ──────────────────────────────────────────────────────────

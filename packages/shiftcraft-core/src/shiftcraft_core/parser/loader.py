@@ -134,6 +134,11 @@ def _parse_employee(raw: dict[str, Any]) -> Employee:
             StateRun(value=prev_run_raw["value"], count=prev_run_raw["count"]) if prev_run_raw else None
         ),
     )
+    previous_week_days: dict[date, str] = {
+        _date(d): s
+        for d, s in raw.get("previous_week_days", {}).items()
+        if s  # skip empty strings
+    }
     return Employee(
         id=raw["id"],
         name=raw["name"],
@@ -141,6 +146,7 @@ def _parse_employee(raw: dict[str, Any]) -> Employee:
         balances=dict(raw.get("balances", {})),
         records=dict(raw.get("records", {})),
         history=history,
+        previous_week_days=previous_week_days,
     )
 
 
