@@ -7,7 +7,8 @@ from typing import Any
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from shiftcraft_core import solve
+from pydantic import ValidationError
+from shiftcraft_core import PayloadSchema, ResultSchema, solve
 
 
 @asynccontextmanager
@@ -38,14 +39,17 @@ def health() -> dict[str, str]:
     return {"status": "ok"}
 
 
-@app.post("/schedule")
-def schedule(payload: dict[str, Any]) -> dict[str, Any]:
+@app.post("/schedule", response_model=ResultSchema)
+def schedule(payload: PayloadSchema) -> dict[str, Any]:
     """
     Generate a schedule from the given input payload.
 
-    Accepts the same JSON structure as shiftcraft-core's solve() function.
+    Validates the request against the shiftcraft-core input contract and
+    returns a result conforming to the output contract.
     """
     try:
-        return solve(payload)
+        return solve(payload.model_dump())
+    except ValidationError as exc:
+        raise HTTPException(status_code=422, detail=exc.errors()) from exc
     except Exception as exc:
-        raise HTTPException(status_code=422, detail=str(exc)) from exc
+        raise HTTPException(status_code=500, detail=str(exc)) from exc
