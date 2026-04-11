@@ -29,7 +29,7 @@ run = "zensical serve --dev-addr 0.0.0.0:8000"
 description = "Serve the documentation locally"
 
 [tasks.test]
-run = "pytest --cov-report=term-missing --cov-fail-under=80"
+run = "pytest --cov=shiftcraft_core --cov-report=term-missing --cov-fail-under=80"
 description = "Run fast tests with coverage report for all packages (fails under 80%)"
 
 [tasks.sync]
