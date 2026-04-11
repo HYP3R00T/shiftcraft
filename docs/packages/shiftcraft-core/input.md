@@ -275,14 +275,6 @@ A map from state name to a list of record objects. Each record represents one ea
 | Field | Type | Description |
 |---|---|---|
 | `last_month_shift_counts` | object | Count of each state in the previous period, e.g. `{"morning": 8, "night": 6}` |
-| `previous_state_run` | object or `null` | The state and consecutive-day count at the end of the previous period |
-
-`previous_state_run` fields:
-
-| Field | Type | Description |
-|---|---|---|
-| `value` | string | The state that was running at period end |
-| `count` | integer | How many consecutive days it had been running |
 
 #### previous_week_days
 

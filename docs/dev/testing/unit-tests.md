@@ -1,6 +1,6 @@
 # Unit Tests
 
-Unit tests verify a single function or class in isolation. They should use local,
+Unit tests verify a single function or class in isolation. They use local,
 synthetic inputs and avoid external dependencies.
 
 ## What to Unit Test
@@ -10,90 +10,67 @@ Unit tests are appropriate for:
 - Pure functions with deterministic outputs
 - Input validation and error handling
 - Edge cases and boundary values
-- Small local filesystem interactions using `tmp_path`
 
 Unit tests are not appropriate for:
 
 - Cross-module workflows spanning many layers
-- Environment-dependent paths that need custom local setup
 - Network calls or long-running jobs
 
 ## File Layout
 
-Unit tests should mirror the source tree. Keep one test file per module when practical,
-using `test_*.py` naming.
+Unit tests mirror the source tree. Each source module has a corresponding test file
+in the same subdirectory under `tests/`.
 
 | Source module | Test file |
 |---|---|
-| `src/example/math_utils.py` | `tests/unit/test_math_utils.py` |
-| `src/example/config.py` | `tests/unit/test_config.py` |
-| `src/example/parser.py` | `tests/unit/test_parser.py` |
+| `engine/dispatch.py` | `tests/engine/test_dispatch.py` |
+| `parser/loader.py` | `tests/parser/test_loader.py` |
+| `primitives/cell.py` | `tests/primitives/test_cell.py` |
+| `schema/payload.py` | `tests/schema/test_payload.py` |
 
-## Class Grouping
+## Marking Unit Tests
 
-Group tests by the function or class they cover using a `Test` class. This keeps related tests together and makes failures easier to locate.
+Apply the `unit` marker to all unit tests.
 
 ```python
-class TestParser:
-    def test_rejects_empty_input(self): ...
-    def test_accepts_valid_input(self): ...
-    def test_normalizes_whitespace(self): ...
+import pytest
+
+@pytest.mark.unit
+def test_rejects_empty_input():
+    with pytest.raises(ValueError):
+        parse("")
+```
+
+## Shared Fixtures
+
+Common builders and helpers live in `tests/conftest.py`. Import them using relative
+imports from subdirectory test files.
+
+```python
+from ..conftest import make_employee, make_schedule_input, make_model, solve
 ```
 
 ## Synthetic Inputs
 
-Create minimal, synthetic inputs instead of loading large fixtures.
+Build minimal inputs directly in the test rather than loading large fixtures.
 
 ```python
-def parse_int(value: str) -> int:
-    return int(value.strip())
-
-def test_parse_int_trims_whitespace() -> None:
-    assert parse_int(" 42 ") == 42
-```
-
-## Mocking Platform and Environment
-
-Use `unittest.mock.patch` for external calls and `monkeypatch` for environment
-variables.
-
-```python
-def test_env_var_overrides_default(monkeypatch):
-    monkeypatch.setenv("APP_MODE", "test")
-    assert load_mode() == "test"
+emp = make_employee("E001", balances={"comp_off": 2})
+inp = make_schedule_input([emp], days=5)
 ```
 
 ## Error Handling Tests
 
-Test that functions raise the right exception with a useful message when given invalid input. Use `pytest.raises` with a `match` pattern to assert on the message.
+Use `pytest.raises` with a `match` pattern to assert on the exception message.
 
 ```python
-def test_invalid_backend_raises(self):
-    with pytest.raises(ValueError, match="invalid mode"):
-        resolve_mode("bad-value")
-```
-
-## Filesystem Tests
-
-Use pytest's built-in `tmp_path` fixture for tests that need real files on disk. It creates a temporary directory that is cleaned up after the test.
-
-```python
-def test_finds_single_pth(self, tmp_path: Path):
-    (tmp_path / "config.toml").write_text("enabled = true\n")
-    result = discover_config(tmp_path)
-    assert result.name == "config.toml"
-```
-
-## Tolerance in Floating Point Assertions
-
-Floating point values should use tolerant comparisons.
-
-```python
-assert abs(result - expected) < 1e-6
+def test_unknown_who_type_raises():
+    with pytest.raises(ValueError, match="Unknown WHO type"):
+        filter_who(WhoFilter(type="unknown"), [])
 ```
 
 ## Related
 
 - [Testing Overview](index.md)
+- [Integration Tests](integration-tests.md)
 - [Optional Test Markers](optional-markers.md)
-- [Property-Based Tests](property-tests.md)

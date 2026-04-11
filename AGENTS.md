@@ -31,14 +31,14 @@ Dev container runs `scripts/setup.sh` automatically on create.
 
 ```sh
 # Full quality pass (run before PR)
-uv run ruff check && uv run ruff format --check && uv run ty check && uv run pytest --cov --cov-report=term-missing --cov-fail-under=80
+uv run ruff check && uv run ruff format --check && uv run ty check && uv run pytest --cov=shiftcraft_core --cov-report=term-missing --cov-fail-under=80
 
 # Individual
 uv run ruff check              # lint
 uv run ruff format             # format (apply)
 uv run ruff format --check     # format (check only)
 uv run ty check                # type check
-uv run pytest --cov --cov-report=term-missing --cov-fail-under=80  # tests
+uv run pytest --cov=shiftcraft_core --cov-report=term-missing --cov-fail-under=80  # tests
 
 # Docs
 uv run zensical build --clean

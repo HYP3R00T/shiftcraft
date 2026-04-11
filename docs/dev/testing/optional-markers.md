@@ -52,7 +52,7 @@ coverage where practical.
 Use the repository standard command:
 
 ```bash
-uv run pytest --cov --cov-report=term-missing --cov-fail-under=80
+uv run pytest --cov=shiftcraft_core --cov-report=term-missing --cov-fail-under=80
 ```
 
 ## Related

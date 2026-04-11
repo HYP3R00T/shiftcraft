@@ -3,59 +3,49 @@
 Integration tests verify that multiple components work correctly together with
 realistic inputs and minimal mocking.
 
-## Status
+## What Integration Tests Cover
 
-Integration tests are not currently committed in this template. This page defines
-how to add them when your project grows.
+- End-to-end behavior of the full solve pipeline
+- Correct output shape and valid state assignments
+- Hard constraint satisfaction across a real scheduling period
 
-## What Integration Tests Should Cover
+## Marking Integration Tests
 
-- Interaction between parser, validation, and execution layers
-- I/O boundaries (filesystem, CLI, serialization formats)
-- End-to-end behavior for a user-level workflow
-
-## When to Write an Integration Test
-
-Write an integration test when:
-
-- A change spans multiple modules and cannot be trusted from unit tests alone
-- A regression happened at component boundaries
-- You need confidence in a real workflow, not just a pure function
-
-Do not write integration tests for logic that can be covered by unit tests. If you can test it with a synthetic tensor, do that instead.
-
-## Markers
-
-If integration tests become slow or require special local setup, use markers and
-document them in `tests/conftest.py` and [Optional Test Markers](optional-markers.md).
-
-## Intended Structure
+Apply the `integration` marker.
 
 ```python
-# tests/integration/test_cli_flow.py
+import pytest
 
-@pytest.fixture(scope="module")
-def sample_project(tmp_path_factory):
-    root = tmp_path_factory.mktemp("project")
-    (root / "input.txt").write_text("hello\n")
-    return root
-
-
-def test_cli_generates_output(sample_project):
-    result = run_cli(sample_project)
-    assert result.exit_code == 0
-    assert (sample_project / "output.txt").is_file()
+@pytest.mark.integration
+def test_status_is_optimal_or_feasible(result):
+    assert result["status"] in ("optimal", "feasible")
 ```
 
-Use module-scoped fixtures when setup is expensive but deterministic.
+## Structure
 
-## Checkpoint Path
+Integration tests for `shiftcraft-core` live in `tests/test_integration.py` and use
+a module-scoped fixture that runs the solver once and shares the result across all
+tests in the file.
 
-Run integration tests with the regular test command unless you introduce separate
-markers or split commands.
+```python
+@pytest.fixture(scope="module")
+def result(payload) -> dict:
+    return solve(payload)
+```
+
+This keeps the full solve from running once per test, which matters given solver
+wall time.
+
+## Running Integration Tests
 
 ```shell
-uv run pytest --cov --cov-report=term-missing --cov-fail-under=80
+uv run pytest -m integration
+```
+
+Or as part of the full suite:
+
+```shell
+uv run pytest --cov=shiftcraft_core --cov-report=term-missing --cov-fail-under=80
 ```
 
 ## Related

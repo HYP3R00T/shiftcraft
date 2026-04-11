@@ -32,8 +32,6 @@ Auto-generated reference for the `shiftcraft_core` package.
 
 ::: shiftcraft_core.types.input.EmployeeHistory
 
-::: shiftcraft_core.types.input.StateRun
-
 ::: shiftcraft_core.types.input.Holiday
 
 ### Rule types
