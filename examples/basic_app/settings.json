@@ -13,7 +13,8 @@
   ],
   "solver": {
     "time_limit_seconds": 60,
-    "log_progress": false
+    "log_progress": false,
+    "relative_gap_limit": 0
   },
   "rules": [
     {

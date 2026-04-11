@@ -41,7 +41,41 @@ if status not in ("optimal", "feasible"):
     print("No schedule to analyse.")
     raise SystemExit(1)
 
-# ── Shift counts ──────────────────────────────────────────────────────────────
+# ── Daily schedule grid ───────────────────────────────────────────────────────
+print("\nDAILY SCHEDULE")
+print("-" * 72)
+
+# Build ordered employee list from input to keep consistent column order
+emp_ids = [e["id"] for e in inp["team"]]
+emp_names = [id_to_name.get(eid, eid) for eid in emp_ids]
+
+# Header
+col_w = 10
+print(f"{'Date':12s}" + "".join(f"{n:>{col_w}}" for n in emp_names))
+print("-" * 72)
+
+STATE_ABBR = {
+    "morning": "M",
+    "afternoon": "A",
+    "night": "N",
+    "regular": "R",
+    "week_off": "WO",
+    "annual": "AO",
+    "comp_off": "CO",
+    "public_holiday": "H",
+}
+
+for d_iso in sorted(schedule.get(emp_ids[0], {}).keys()):
+    d = date.fromisoformat(d_iso)
+    day_label = f"{d_iso} {d.strftime('%a')}"
+    row = f"{day_label:12s}"
+    for eid in emp_ids:
+        state = schedule.get(eid, {}).get(d_iso, "???")
+        abbr = STATE_ABBR.get(state, state[:3].upper())
+        row += f"{abbr:>{col_w}}"
+    print(row)
+
+
 print("\nSHIFT COUNTS (full month)")
 print("-" * 72)
 header = f"{'Name':10s}  {'morning':>7}  {'afternoon':>9}  {'night':>5}  {'regular':>7}  {'week_off':>8}  {'annual':>6}  {'comp_off':>8}  {'total':>5}"
