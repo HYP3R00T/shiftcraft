@@ -8,20 +8,20 @@ const inter = Inter({ variable: "--font-sans", subsets: ["latin"] });
 const jetbrainsMono = JetBrains_Mono({ variable: "--font-mono", subsets: ["latin"] });
 
 export const metadata: Metadata = {
-    title: "Shiftcraft",
-    description: "Constraint-driven workforce scheduler",
+  title: "Shiftcraft",
+  description: "Constraint-driven workforce scheduler",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-    return (
-        <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable}`} suppressHydrationWarning>
-            <body>
-                <ThemeProvider>
-                    <TooltipProvider>
-                        {children}
-                    </TooltipProvider>
-                </ThemeProvider>
-            </body>
-        </html>
-    );
+  return (
+    <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable}`} suppressHydrationWarning>
+      <body>
+        <ThemeProvider>
+          <TooltipProvider>
+            {children}
+          </TooltipProvider>
+        </ThemeProvider>
+      </body>
+    </html>
+  );
 }

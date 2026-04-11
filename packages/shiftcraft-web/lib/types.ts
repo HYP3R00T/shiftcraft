@@ -1,95 +1,71 @@
-// --- Output types ---
+// ── Settings types ────────────────────────────────────────────────────────────
 
-export type ShiftType =
-    | "morning"
-    | "afternoon"
-    | "night"
-    | "regular"
-    | "week_off"
-    | "annual"
-    | "comp_off";
-
-export type DayEntry = {
-    date: string;
-    [employee: string]: string;
+export type RuleScope = {
+    who: Record<string, unknown>;
+    when: Record<string, unknown>;
 };
 
-export type EmployeeSummary = {
-    morning: number;
-    afternoon: number;
-    night: number;
-    regular: number;
-    week_off: number;
-    annual: number;
-    comp_off: number;
+export type Rule = {
+    id: string;
+    type: string;
+    label?: string;
+    scope: RuleScope;
+    enforcement: "hard" | "soft" | "preference";
+    weight?: "high" | "medium" | "low";
+    overrides?: string[];
+    [key: string]: unknown; // primitive-specific params
 };
+
+export type SolverConfig = {
+    time_limit_seconds?: number;
+    log_progress?: boolean;
+    num_workers?: number;
+    linearization_level?: number;
+    relative_gap_limit?: number;
+};
+
+export type ScheduleSettings = {
+    shifts: string[];
+    leave_types: string[];
+    rules: Rule[];
+    solver: SolverConfig;
+};
+
+// ── Output types ──────────────────────────────────────────────────────────────
+
+export type SolverStatus = "optimal" | "feasible" | "infeasible" | "unknown" | "model_invalid";
 
 export type ScheduleResult = {
-    status: "ok" | "feasible" | "infeasible" | "unknown";
-    schedule?: DayEntry[];
-    summary?: Record<string, EmployeeSummary>;
-    penalty?: number;
-    conflicts?: string[];
+    status: SolverStatus;
+    // date-keyed: { "2026-04-01": { "E001": "morning", ... }, ... }
+    schedule: Record<string, Record<string, string>>;
+    metadata: {
+        status: SolverStatus;
+        solve_time_seconds: number;
+        objective: number | null;
+    };
 };
 
-// --- Input types ---
-
-export type LeaveRequest = {
-    date: string;
-    leave_type: "annual" | "comp_off" | "week_off" | null;
-};
+// ── Input types ───────────────────────────────────────────────────────────────
 
 export type CompOffRecord = {
-    holiday_date: string;
+    earned_date: string;
     redeemed_on: string | null;
 };
 
-export type ShiftHistory = {
-    morning: number;
-    afternoon: number;
-    night: number;
-    regular: number;
-    week_off: number;
-    leave: number;
+export type EmployeeHistory = {
+    last_month_shift_counts: Record<string, number>;
+    previous_state_run?: { value: string; count: number } | null;
 };
 
 export type Employee = {
     id: string;
     name: string;
-    is_senior: boolean;
-    city: string;
-    comp_off_balance: number;
-    leave_requests: LeaveRequest[];
+    attributes: Record<string, string>;
+    balances: Record<string, number>;
+    records: Record<string, CompOffRecord[]>;
+    history: EmployeeHistory;
     previous_week_days: Record<string, string>;
-    history: {
-        last_month_shift_counts: ShiftHistory;
-        comp_off: {
-            remaining_count: number;
-            records: CompOffRecord[];
-        };
-    };
-};
-
-export type CoverageSlot = {
-    min: number;
-    target: number;
-    max: number;
-};
-
-export type DayCoverage = {
-    morning: CoverageSlot;
-    afternoon: CoverageSlot;
-    night: CoverageSlot;
-    regular: CoverageSlot;
-};
-
-export type DateRangeOverride = {
-    start: string;
-    end: string;
-    morning: CoverageSlot;
-    afternoon: CoverageSlot;
-    night: CoverageSlot;
-    regular: CoverageSlot;
 };
 
 export type Holiday = {
@@ -100,9 +76,18 @@ export type Holiday = {
 export type ScheduleInput = {
     period: { start: string; end: string };
     team: Employee[];
-    coverage: {
-        by_day_of_week: Record<string, DayCoverage>;
-        by_date_range: DateRangeOverride[];
-    };
     holidays: Holiday[];
 };
+
+// ── Display helpers ───────────────────────────────────────────────────────────
+
+// Known shift/leave states for styling — open-ended, unknown states fall back gracefully.
+export type KnownState =
+    | "morning"
+    | "afternoon"
+    | "night"
+    | "regular"
+    | "week_off"
+    | "annual"
+    | "comp_off"
+    | "public_holiday";
