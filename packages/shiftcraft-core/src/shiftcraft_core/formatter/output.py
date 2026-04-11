@@ -27,7 +27,7 @@ _STATUS_MAP = {
 
 
 def format_solution(
-    status: int,
+    status: cp_model.CpSolverStatus,
     solver: cp_model.CpSolver,
     inp: ScheduleInput,
     vars_dict: dict[str, Any],
@@ -47,14 +47,15 @@ def format_solution(
     date_isos = vars_dict["date_isos"]
     states = vars_dict["states"]
 
-    schedule: dict[str, dict[str, str]] = {}
+    by_date: dict[str, dict[str, str]] = {d_iso: {} for d_iso in date_isos}
     for emp in inp.employees:
-        schedule[emp.id] = {}
         for d_iso in date_isos:
             for s in states:
                 if solver.value(x[(emp.id, d_iso, s)]) == 1:
-                    schedule[emp.id][d_iso] = s
+                    by_date[d_iso][emp.id] = s
                     break
+
+    schedule: dict[str, dict[str, str]] = dict(sorted(by_date.items()))
 
     if vars_dict.get("penalties"):
         metadata["objective"] = int(solver.objective_value)
