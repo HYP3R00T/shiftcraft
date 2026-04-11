@@ -4,99 +4,91 @@ icon: lucide/file-output
 
 # Output format
 
-The engine always returns a JSON object. The shape of the response depends on whether a valid roster was found.
+The engine always returns a JSON object with three top-level keys: `status`, `schedule`, and `metadata`.
 
 ---
 
-## When a roster is found
+## status
+
+A string indicating the solver outcome.
+
+| Value | Meaning |
+|---|---|
+| `"optimal"` | The solver found the best possible roster within the time limit |
+| `"feasible"` | The solver found a valid roster but could not confirm it is optimal before the time limit expired. All hard constraints are satisfied. |
+| `"infeasible"` | No roster exists that satisfies all hard constraints |
+| `"unknown"` | The solver timed out before finding any valid roster |
+| `"model_invalid"` | The model could not be constructed — indicates a configuration error |
+
+---
+
+## schedule
+
+When `status` is `"optimal"` or `"feasible"`, `schedule` is a date-keyed object. Each key is an ISO date string. Each value is a map of employee ID to assigned state for that day.
 
 ```json
-{
-  "status": "ok",
-  "schedule": [...],
-  "summary": {...},
-  "penalty": 2856
-}
-```
-
-### status
-
-Either `"ok"` or `"feasible"`.
-
-- `"ok"` means the solver found the mathematically optimal solution within the time limit.
-- `"feasible"` means the solver found a valid solution but could not confirm it is the best possible one before the time limit was reached. The roster is still fully valid — all hard constraints are satisfied.
-
-### schedule
-
-A list of day objects, one per date in the scheduling period, in chronological order.
-
-Each day object contains the date and one assignment per employee:
-
-```json
-{
-  "date": "2026-04-01",
-  "Amogha": "afternoon",
-  "Suchi": "morning",
-  "Basheer": "week_off",
-  "Anuhya": "night",
-  "Pavani": "regular"
-}
-```
-
-Each employee's value is one of: `morning`, `afternoon`, `night`, `regular`, `week_off`, `annual`, `comp_off`.
-
-### summary
-
-A per-employee count of each assignment type across the full period.
-
-```json
-{
-  "Amogha": {
-    "morning": 5,
-    "afternoon": 6,
-    "night": 6,
-    "regular": 6,
-    "week_off": 7,
-    "annual": 0,
-    "comp_off": 0
+"schedule": {
+  "2026-04-01": {
+    "E001": "afternoon",
+    "E002": "week_off",
+    "E003": "night",
+    "E004": "week_off",
+    "E005": "morning"
+  },
+  "2026-04-02": {
+    "E001": "afternoon",
+    "E002": "morning",
+    ...
   }
 }
 ```
 
-This is useful for auditing fairness and verifying that leave entitlements were applied correctly.
+Dates are sorted chronologically. Every date in the requested period is present. Every employee in the input team has exactly one state per date.
 
-### penalty
+Valid state values are whatever was declared in `settings.shifts` and `settings.leave_types` for the run.
 
-An integer representing the total weighted penalty of the returned roster. Lower is better. A penalty of `0` would mean every soft preference was fully satisfied, which is rarely achievable in practice.
-
-The penalty is computed as the sum of all soft constraint violations, each multiplied by its configured weight. See [soft constraints](constraints/soft.md) for the full list of what contributes to this score.
+When `status` is `"infeasible"` or `"unknown"`, `schedule` is an empty object `{}`.
 
 ---
 
-## When no roster is found
+## metadata
+
+Present in all responses.
+
+| Field | Type | Description |
+|---|---|---|
+| `status` | string | Same value as the top-level `status` field |
+| `solve_time_seconds` | float | Wall-clock time the solver ran, in seconds |
+| `objective` | integer or `null` | Total weighted penalty of the returned roster — see below |
+
+### objective
+
+The objective is the sum of all soft constraint penalties in the returned roster. It is only present (non-null) when the model includes soft constraints.
+
+Lower is better. A value of `0` would mean every soft preference was fully satisfied. In practice, some penalty is expected when preferences conflict with coverage requirements or with each other.
+
+The number is only meaningful relative to other runs with the same input and the same constraint weights. It cannot be compared across runs with different team sizes, periods, or rule configurations.
+
+---
+
+## Full example
 
 ```json
 {
-  "status": "infeasible",
-  "conflicts": [
-    "2026-04-10: 3 hard leave requests (Alice, Bob, Carol) but only 2 can be off (team=5, min_workers=3)",
-    "2026-04-15: total minimum coverage (6) exceeds team size (5)"
-  ]
+  "status": "optimal",
+  "schedule": {
+    "2026-04-01": {
+      "E001": "afternoon",
+      "E002": "week_off",
+      "E003": "night",
+      "E004": "week_off",
+      "E005": "morning"
+    }
+  },
+  "metadata": {
+    "status": "optimal",
+    "solve_time_seconds": 0.886,
+    "objective": 4543
+  }
 }
 ```
-
-### status
-
-`"infeasible"` when no valid roster exists, or `"infeasible"` when the solver timed out without finding any valid solution.
-
-### conflicts
-
-A list of human-readable explanations describing why the problem could not be solved. Each entry identifies the specific date and the rule that was violated.
-
-Common causes include:
-
-- Minimum coverage requirements that exceed the available team size on a given day
-- Too many hard leave requests on the same date, leaving insufficient workers to meet minimum coverage
-- Interactions between consecutive-day rules, weekly off requirements, and coverage minimums that create an impossible combination
-
-If no specific structural conflict is detected, the message will indicate that the failure is likely caused by an interaction of multiple constraints rather than a single obvious violation.

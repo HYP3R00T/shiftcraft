@@ -4,56 +4,52 @@ icon: lucide/code
 
 # API Reference
 
-Auto-generated reference for the `shiftcraft_core` package. All public symbols are documented here from their source docstrings.
+Auto-generated reference for the `shiftcraft_core` package.
 
 ## Entry point
 
-::: shiftcraft_core.solver.solve
-
-## Model building
-
-::: shiftcraft_core.solver.build_model
+::: shiftcraft_core.engine.solver.solve
 
 ## Input parsing
 
-::: shiftcraft_core.parser.load
+::: shiftcraft_core.parser.loader.load
+
+## Model building
+
+::: shiftcraft_core.engine.solver.build_model
+
+## Output formatting
+
+::: shiftcraft_core.formatter.output.format_solution
 
 ## Data types
 
-::: shiftcraft_core.types.ScheduleInput
+### Input types
 
-::: shiftcraft_core.types.Employee
+::: shiftcraft_core.types.input.ScheduleInput
 
-::: shiftcraft_core.types.LeaveRequest
+::: shiftcraft_core.types.input.Employee
 
-::: shiftcraft_core.types.CompOffRecord
+::: shiftcraft_core.types.input.EmployeeHistory
 
-::: shiftcraft_core.types.ShiftHistory
+::: shiftcraft_core.types.input.StateRun
 
-::: shiftcraft_core.types.DayCoverage
+::: shiftcraft_core.types.input.Holiday
 
-::: shiftcraft_core.types.CoverageSlot
+### Rule types
 
-::: shiftcraft_core.types.DateRangeOverride
+::: shiftcraft_core.types.rules.Settings
 
-::: shiftcraft_core.types.Holiday
+::: shiftcraft_core.types.rules.Rule
 
-## Variables
+::: shiftcraft_core.types.rules.Scope
 
-::: shiftcraft_core.variables.create_variables
+::: shiftcraft_core.types.rules.WhoFilter
 
-## Constraints
+::: shiftcraft_core.types.rules.WhenFilter
 
-::: shiftcraft_core.constraints.add_constraints
+::: shiftcraft_core.types.rules.BalanceSource
 
-## Objective
+::: shiftcraft_core.types.rules.RuleEnforcement
 
-::: shiftcraft_core.objective.add_objective
-
-## Formatter
-
-::: shiftcraft_core.formatter.format_solution
-
-## Diagnostics
-
-::: shiftcraft_core.diagnostics.diagnose_conflicts
+::: shiftcraft_core.types.rules.RuleWeight
