@@ -47,6 +47,9 @@ Optional solver configuration.
 |---|---|---|---|
 | `time_limit_seconds` | integer | `30` | Maximum wall-clock time the solver may run |
 | `log_progress` | boolean | `false` | Whether to emit solver search logs |
+| `num_workers` | integer | `0` | Number of parallel search workers. `0` = auto-detect. Has no effect on single-core environments (e.g. AWS Lambda). |
+| `linearization_level` | integer | `1` | Controls how aggressively the solver linearises the model. `0` = minimal, `1` = standard (recommended), `2` = aggressive. Higher values improve optimality proofs but slow down finding the first solution. |
+| `relative_gap_limit` | float | `0.02` | Stop as soon as a solution within this fraction of optimal is found. `0.0` = prove optimality (slowest). `0.02` = stop within 2% of optimal (recommended for production — roughly halves solve time with negligible quality difference). `0.05` = stop within 5% (fastest, noticeable quality trade-off). |
 
 ### rules
 
