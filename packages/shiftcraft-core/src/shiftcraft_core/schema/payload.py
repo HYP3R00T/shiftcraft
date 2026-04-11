@@ -54,7 +54,7 @@ class WhenDayOfWeek(BaseModel):
 
 class WhenDayType(BaseModel):
     type: Literal["day_type"]
-    value: Literal["weekend", "holiday"]
+    value: str  # engine-defined: "weekend", "holiday", or any future day type
 
 
 WhenSchema = WhenAlways | WhenDates | WhenDateRange | WhenDayOfWeek | WhenDayType

@@ -21,7 +21,8 @@ def filter_who(who: WhoFilter, employees: list[Employee]) -> list[Employee]:
         case "all":
             return list(employees)
         case "attribute":
-            return [e for e in employees if e.attributes.get(who.key) == who.value]
+            key = who.key or ""
+            return [e for e in employees if e.attributes.get(key) == who.value]
         case "employees":
             ids = set(who.ids)
             return [e for e in employees if e.id in ids]
