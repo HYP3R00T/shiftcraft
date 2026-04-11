@@ -7,7 +7,7 @@ Exactly one must be true — this enforces completeness and exclusivity.
 vars_dict layout
 ----------------
 {
-    "x": dict[(emp_id, date_iso, state)] -> BoolVar,
+    "x": dict[(emp_id, date_iso, state)] -> IntVar,
     "emp_ids": list[str],
     "date_isos": list[str],
     "states": list[str],
@@ -34,11 +34,11 @@ def create_variables(
     date_isos = [d.isoformat() for d in inp.dates]
     states = inp.states
 
-    x: dict[tuple[str, str, str], cp_model.BoolVar] = {}
+    x: dict[tuple[str, str, str], Any] = {}
 
     for emp in inp.employees:
         for _d, d_iso in zip(inp.dates, date_isos, strict=True):
-            cell_vars: list[cp_model.BoolVar] = []
+            cell_vars: list[Any] = []
             for s in states:
                 var = model.new_bool_var(f"x[{emp.id},{d_iso},{s}]")
                 x[(emp.id, d_iso, s)] = var
