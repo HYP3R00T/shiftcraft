@@ -3,5 +3,6 @@
 from __future__ import annotations
 
 from .engine import solve
+from .schema import PayloadSchema, ResultSchema
 
-__all__ = ["solve"]
+__all__ = ["solve", "PayloadSchema", "ResultSchema"]

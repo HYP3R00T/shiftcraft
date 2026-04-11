@@ -4,7 +4,7 @@ version = "0.1.0"
 description = "Constraint-driven workforce scheduling core engine using OR-Tools CP-SAT"
 readme = "README.md"
 requires-python = ">=3.13"
-dependencies = ["ortools>=9.15.6755"]
+dependencies = ["ortools>=9.15.6755", "pydantic>=2.12.5"]
 
 [build-system]
 requires = ["uv_build>=0.11.1,<0.12.0"]

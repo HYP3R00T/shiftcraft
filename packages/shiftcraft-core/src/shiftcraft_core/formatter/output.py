@@ -1,12 +1,8 @@
 """
 format_solution(status, solver, inp, vars_dict) -> dict
 
-Converts the CP-SAT solver result into the API response shape:
-{
-    "status": "optimal" | "feasible" | "infeasible" | "unknown",
-    "schedule": { emp_id: { date_iso: state } },
-    "metadata": { "solve_time_seconds": float, "objective": int | None }
-}
+Converts the CP-SAT solver result into the API response shape and validates
+it against ``ResultSchema`` before returning.
 """
 
 from __future__ import annotations
@@ -15,6 +11,7 @@ from typing import Any
 
 from ortools.sat.python import cp_model
 
+from ..schema.result import ResultSchema
 from ..types.input import ScheduleInput
 
 _STATUS_MAP = {
@@ -41,7 +38,9 @@ def format_solution(
     }
 
     if status not in (cp_model.OPTIMAL, cp_model.FEASIBLE):
-        return {"status": status_str, "schedule": {}, "metadata": metadata}
+        result = {"status": status_str, "schedule": {}, "metadata": metadata}
+        ResultSchema.model_validate(result)
+        return result
 
     x = vars_dict["x"]
     date_isos = vars_dict["date_isos"]
@@ -60,4 +59,6 @@ def format_solution(
     if vars_dict.get("penalties"):
         metadata["objective"] = int(solver.objective_value)
 
-    return {"status": status_str, "schedule": schedule, "metadata": metadata}
+    result = {"status": status_str, "schedule": schedule, "metadata": metadata}
+    ResultSchema.model_validate(result)
+    return result

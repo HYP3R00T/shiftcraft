@@ -1,8 +1,9 @@
 """
 load(payload) -> (Settings, ScheduleInput)
 
-Converts the raw API payload dict into fully typed objects.
-No validation beyond what is needed to construct the types.
+Validates the raw API payload against ``PayloadSchema``, then converts it
+into fully typed internal objects.  A ``pydantic.ValidationError`` is raised
+on any structural or type violation before the engine is invoked.
 """
 
 from __future__ import annotations
@@ -10,6 +11,7 @@ from __future__ import annotations
 from datetime import date, timedelta
 from typing import Any
 
+from ..schema.payload import PayloadSchema
 from ..types.input import Employee, EmployeeHistory, Holiday, ScheduleInput, StateRun
 from ..types.rules import (
     BalanceSource,
@@ -165,14 +167,19 @@ def _parse_holiday(raw: dict[str, Any]) -> Holiday:
 
 def load(payload: dict[str, Any]) -> tuple[Settings, ScheduleInput]:
     """
-    Parse the raw API payload.
+    Validate and parse the raw API payload.
 
     Args:
         payload: Dict with top-level keys ``"settings"`` and ``"input"``.
 
     Returns:
         ``(settings, schedule_input)`` — fully typed objects ready for the engine.
+
+    Raises:
+        pydantic.ValidationError: If the payload does not conform to the input schema.
     """
+    PayloadSchema.model_validate(payload)
+
     settings = _parse_settings(payload["settings"])
 
     inp_raw = payload["input"]
