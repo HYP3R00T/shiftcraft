@@ -2,193 +2,193 @@
   "status": "optimal",
   "schedule": {
     "2026-04-01": {
-      "E001": "night",
-      "E002": "afternoon",
+      "E001": "morning",
+      "E002": "week_off",
       "E003": "week_off",
-      "E004": "morning",
-      "E005": "week_off"
+      "E004": "night",
+      "E005": "afternoon"
     },
     "2026-04-02": {
       "E001": "night",
       "E002": "week_off",
+      "E003": "afternoon",
+      "E004": "regular",
+      "E005": "morning"
+    },
+    "2026-04-03": {
+      "E001": "week_off",
+      "E002": "night",
       "E003": "week_off",
       "E004": "morning",
       "E005": "afternoon"
     },
-    "2026-04-03": {
-      "E001": "afternoon",
-      "E002": "week_off",
-      "E003": "night",
-      "E004": "regular",
-      "E005": "morning"
-    },
     "2026-04-04": {
-      "E001": "week_off",
-      "E002": "morning",
+      "E001": "morning",
+      "E002": "night",
       "E003": "afternoon",
       "E004": "week_off",
-      "E005": "night"
+      "E005": "week_off"
     },
     "2026-04-05": {
       "E001": "annual",
-      "E002": "night",
+      "E002": "afternoon",
       "E003": "morning",
       "E004": "week_off",
-      "E005": "afternoon"
+      "E005": "night"
     },
     "2026-04-06": {
-      "E001": "regular",
-      "E002": "night",
-      "E003": "morning",
-      "E004": "week_off",
-      "E005": "afternoon"
+      "E001": "afternoon",
+      "E002": "morning",
+      "E003": "night",
+      "E004": "regular",
+      "E005": "week_off"
     },
     "2026-04-07": {
-      "E001": "morning",
-      "E002": "week_off",
-      "E003": "night",
-      "E004": "afternoon",
-      "E005": "week_off"
-    },
-    "2026-04-08": {
-      "E001": "afternoon",
-      "E002": "morning",
-      "E003": "night",
-      "E004": "regular",
-      "E005": "week_off"
-    },
-    "2026-04-09": {
       "E001": "week_off",
-      "E002": "morning",
-      "E003": "afternoon",
-      "E004": "regular",
-      "E005": "night"
-    },
-    "2026-04-10": {
-      "E001": "afternoon",
-      "E002": "morning",
+      "E002": "afternoon",
       "E003": "week_off",
-      "E004": "regular",
-      "E005": "night"
-    },
-    "2026-04-11": {
-      "E001": "night",
-      "E002": "week_off",
-      "E003": "week_off",
-      "E004": "morning",
-      "E005": "afternoon"
-    },
-    "2026-04-12": {
-      "E001": "week_off",
-      "E002": "morning",
-      "E003": "afternoon",
-      "E004": "week_off",
-      "E005": "night"
-    },
-    "2026-04-13": {
-      "E001": "regular",
-      "E002": "morning",
-      "E003": "week_off",
-      "E004": "night",
-      "E005": "afternoon"
-    },
-    "2026-04-14": {
-      "E001": "week_off",
-      "E002": "week_off",
-      "E003": "afternoon",
       "E004": "night",
       "E005": "morning"
     },
-    "2026-04-15": {
+    "2026-04-08": {
+      "E001": "regular",
+      "E002": "morning",
+      "E003": "night",
+      "E004": "week_off",
+      "E005": "afternoon"
+    },
+    "2026-04-09": {
+      "E001": "afternoon",
+      "E002": "morning",
+      "E003": "night",
+      "E004": "regular",
+      "E005": "week_off"
+    },
+    "2026-04-10": {
       "E001": "regular",
       "E002": "night",
+      "E003": "afternoon",
+      "E004": "week_off",
+      "E005": "morning"
+    },
+    "2026-04-11": {
+      "E001": "week_off",
+      "E002": "week_off",
+      "E003": "afternoon",
+      "E004": "morning",
+      "E005": "night"
+    },
+    "2026-04-12": {
+      "E001": "afternoon",
+      "E002": "week_off",
       "E003": "week_off",
+      "E004": "morning",
+      "E005": "night"
+    },
+    "2026-04-13": {
+      "E001": "week_off",
+      "E002": "night",
+      "E003": "morning",
+      "E004": "week_off",
+      "E005": "afternoon"
+    },
+    "2026-04-14": {
+      "E001": "morning",
+      "E002": "night",
+      "E003": "afternoon",
+      "E004": "week_off",
+      "E005": "week_off"
+    },
+    "2026-04-15": {
+      "E001": "regular",
+      "E002": "week_off",
+      "E003": "night",
       "E004": "afternoon",
       "E005": "morning"
     },
     "2026-04-16": {
-      "E001": "afternoon",
+      "E001": "week_off",
       "E002": "week_off",
-      "E003": "morning",
-      "E004": "week_off",
-      "E005": "night"
+      "E003": "night",
+      "E004": "morning",
+      "E005": "afternoon"
     },
     "2026-04-17": {
-      "E001": "week_off",
+      "E001": "afternoon",
       "E002": "night",
-      "E003": "morning",
-      "E004": "week_off",
-      "E005": "afternoon"
+      "E003": "week_off",
+      "E004": "regular",
+      "E005": "morning"
     },
     "2026-04-18": {
       "E001": "annual",
-      "E002": "night",
-      "E003": "afternoon",
+      "E002": "afternoon",
+      "E003": "week_off",
       "E004": "morning",
-      "E005": "week_off"
+      "E005": "night"
     },
     "2026-04-19": {
       "E001": "annual",
-      "E002": "night",
+      "E002": "morning",
       "E003": "afternoon",
-      "E004": "morning",
+      "E004": "night",
       "E005": "week_off"
     },
     "2026-04-20": {
       "E001": "regular",
-      "E002": "afternoon",
+      "E002": "week_off",
       "E003": "night",
-      "E004": "week_off",
+      "E004": "afternoon",
       "E005": "morning"
     },
     "2026-04-21": {
-      "E001": "night",
+      "E001": "regular",
       "E002": "morning",
-      "E003": "afternoon",
-      "E004": "regular",
-      "E005": "week_off"
+      "E003": "night",
+      "E004": "week_off",
+      "E005": "afternoon"
     },
     "2026-04-22": {
-      "E001": "week_off",
+      "E001": "night",
       "E002": "afternoon",
-      "E003": "morning",
-      "E004": "night",
-      "E005": "week_off"
+      "E003": "week_off",
+      "E004": "regular",
+      "E005": "morning"
     },
     "2026-04-23": {
       "E001": "regular",
-      "E002": "afternoon",
+      "E002": "morning",
+      "E003": "week_off",
+      "E004": "night",
+      "E005": "afternoon"
+    },
+    "2026-04-24": {
+      "E001": "night",
+      "E002": "week_off",
       "E003": "morning",
+      "E004": "afternoon",
+      "E005": "week_off"
+    },
+    "2026-04-25": {
+      "E001": "week_off",
+      "E002": "morning",
+      "E003": "afternoon",
+      "E004": "night",
+      "E005": "week_off"
+    },
+    "2026-04-26": {
+      "E001": "week_off",
+      "E002": "morning",
+      "E003": "afternoon",
       "E004": "week_off",
       "E005": "night"
     },
-    "2026-04-24": {
-      "E001": "week_off",
-      "E002": "morning",
-      "E003": "night",
-      "E004": "regular",
-      "E005": "afternoon"
-    },
-    "2026-04-25": {
-      "E001": "afternoon",
-      "E002": "week_off",
-      "E003": "week_off",
-      "E004": "night",
-      "E005": "morning"
-    },
-    "2026-04-26": {
-      "E001": "morning",
-      "E002": "week_off",
-      "E003": "week_off",
-      "E004": "night",
-      "E005": "afternoon"
-    },
     "2026-04-27": {
-      "E001": "annual",
-      "E002": "afternoon",
-      "E003": "night",
+      "E001": "night",
+      "E002": "comp_off",
+      "E003": "morning",
       "E004": "regular",
-      "E005": "morning"
+      "E005": "afternoon"
     },
     "2026-04-28": {
       "E001": "night",
@@ -198,23 +198,23 @@
       "E005": "morning"
     },
     "2026-04-29": {
-      "E001": "regular",
-      "E002": "comp_off",
-      "E003": "night",
-      "E004": "afternoon",
-      "E005": "morning"
+      "E001": "annual",
+      "E002": "afternoon",
+      "E003": "morning",
+      "E004": "regular",
+      "E005": "night"
     },
     "2026-04-30": {
-      "E001": "morning",
+      "E001": "afternoon",
       "E002": "comp_off",
-      "E003": "afternoon",
+      "E003": "morning",
       "E004": "regular",
       "E005": "night"
     }
   },
   "metadata": {
     "status": "optimal",
-    "solve_time_seconds": 1.117,
+    "solve_time_seconds": 0.333,
     "objective": 4543
   }
 }
