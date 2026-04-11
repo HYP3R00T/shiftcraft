@@ -22,7 +22,13 @@ inp = json.loads(INPUT_PATH.read_text(encoding="utf-8"))
 # Build id → name map
 id_to_name = {e["id"]: e["name"] for e in inp["team"]}
 
-schedule: dict[str, dict[str, str]] = data["schedule"]
+# schedule is date-keyed: { date_iso: { emp_id: shift } }
+# Transpose to emp-keyed for analysis: { emp_id: { date_iso: shift } }
+_schedule_by_date: dict[str, dict[str, str]] = data["schedule"]
+schedule: dict[str, dict[str, str]] = {}
+for d_iso, emp_map in _schedule_by_date.items():
+    for emp_id, shift in emp_map.items():
+        schedule.setdefault(emp_id, {})[d_iso] = shift
 status = data["status"]
 
 print("=" * 72)
