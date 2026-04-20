@@ -8,13 +8,13 @@ dependencies = []
 
 [dependency-groups]
 dev = [
-  "mkdocstrings[python]>=1.0.3",
-  "prek>=0.3.8",
-  "pytest>=9.0.2",
+  "mkdocstrings[python]>=1.0.4",
+  "prek>=0.3.9",
+  "pytest>=9.0.3",
   "pytest-cov>=7.1.0",
-  "ruff>=0.15.7",
-  "ty>=0.0.24",
-  "zensical>=0.0.29",
+  "ruff>=0.15.11",
+  "ty>=0.0.31",
+  "zensical>=0.0.33",
 ]
 
 [tool.pytest.ini_options]
